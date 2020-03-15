@@ -98,7 +98,9 @@ export default {
       'user'
     ]),
     MyList () {
-      return this.creator.userId === this.user[0].profile.userId
+      if (this.user.length > 0) {
+        return this.creator.userId === this.user[0].profile.userId
+      }
     }
   },
   components: {

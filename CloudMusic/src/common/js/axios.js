@@ -10,7 +10,7 @@ export default function OriginAxios (url, data) {
         resolve(response.data)
       })
       .catch((error) => {
-        reject(error)
+        reject(error.response.data)
       })
   })
 }
