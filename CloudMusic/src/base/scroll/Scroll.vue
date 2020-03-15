@@ -49,7 +49,9 @@ export default {
       }
       this.scroll = new BScroll(this.$refs.scrollBox, {
         probeType: this.probeType,
-        click: this.click
+        click: this.click,
+        mouseWheel: true
+        // 使pc可以实现鼠标滚轮效果
       })
       // console.log(this.scroll)
       if (this.listenScroll) {

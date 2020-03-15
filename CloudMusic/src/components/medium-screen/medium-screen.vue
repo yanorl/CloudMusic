@@ -548,7 +548,7 @@ export default {
               background: #2f2f2f
               padding: 0 10px
               border-radius: 5px
-              margin-top: 15px
+              margin: 15px 0
               .icon-box
                 span
                   margin-left: 5px
