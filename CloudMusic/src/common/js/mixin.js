@@ -44,6 +44,7 @@ export const likeMixin = {
     },
     _likeSong (likeId, Boolean, e) {
       likeSong({id: likeId, like: Boolean, timestamp: (new Date()).valueOf()}).then((res) => {
+        console.log(res)
         if (res.code === ERR_OK) {
           // console.log(Boolean)
           e.target.className = ''
@@ -59,6 +60,8 @@ export const likeMixin = {
             this.alertFlow = false
           }, 1500)
         }
+      }).catch(function (error) {
+        console.log(error.msg)
       })
     },
     className (id) {
