@@ -30,7 +30,7 @@
         <subscribers-list v-if="current === 2" :subscribedCount="songlistViewArray.subscribedCount" @scrollTop="scrollTop"></subscribers-list>
       </div>
     </scroll>
-    <category-label ref="CategoryLabel" :songListId="songlistViewArray.id" @updateSongList="_songlistView"></category-label>
+    <category-label ref="CategoryLabel" @updateSongList="updateSongList"></category-label>
     <confirm ref="confirmPlay" text="'播放全部'将会替换当前的播放列表，是否继续" cancelBtnText="取消" confimBtnText="继续" @confirm="confirmClick"></confirm>
     <confirm ref="confirmFavorite" text="确定不再收藏该歌单" cancelBtnText="取消" confimBtnText="确定" @confirm="cancelSubscribed"></confirm>
     <div class="alert-container" v-show="alertFlow">
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { songlistView, playlistSubscribe } from 'api'
+import { songlistView, playlistSubscribe, tagsUpdate } from 'api'
 import { ERR_OK } from 'api/config'
 import Scroll from 'base/scroll/Scroll'
 import Loading from 'base/loading/loading'
@@ -212,6 +212,15 @@ export default {
     },
     plusTag () {
       this.$refs.CategoryLabel.showPop()
+    },
+    updateSongList (data) {
+      console.log(data.toString())
+      tagsUpdate({id: this.songlistViewArray.id, tags: data.join(';')}).then((res) => {
+        if (res.code === ERR_OK) {
+          this.$refs.CategoryLabel.popUpsClose()
+          this._songlistView()
+        }
+      })
     },
     ...mapActions([
       'selectPlay'

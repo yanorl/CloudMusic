@@ -8,7 +8,7 @@
         <div class="title">
           <span>歌单</span>
           <h4>{{songlistViewArray.name}}</h4>
-          <b v-if="MyList">
+          <b v-if="MyList" @click="plusInfo(songlistViewArray.id)">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
           </b>
         </div>
@@ -56,7 +56,7 @@
         <p >
           <pre>简介：<span v-if="songlistViewArray.description"><span v-if="elliFlog">{{songlistViewArray.description | subStr}}</span><span v-if="!elliFlog">{{songlistViewArray.description}}</span>
               <i v-if="songlistViewArray.description.length > 20" @click="changeElli" class="fa" :class="{'fa-caret-down': elliFlog , 'fa-caret-up' : !elliFlog}" aria-hidden="true"></i>
-            </span> <span class="tags" v-if="!songlistViewArray.description">添加简介</span>
+            </span> <span class="tags" v-if="!songlistViewArray.description" @click="plusInfo(songlistViewArray.id)">添加简介</span>
             </pre>
         </p>
       </div>
@@ -139,6 +139,9 @@ export default {
     },
     plusTag () {
       this.$emit('plusTag')
+    },
+    plusInfo (id) {
+      this.$router.push('/editPlaylistInfo/' + id)
     }
   }
 }

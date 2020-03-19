@@ -50,6 +50,12 @@ const album = (resolve) => {
   })
 }
 
+const editPlaylistInfo = (resolve) => {
+  import('components/edit-playlist-info/edit-playlist-info').then((module) => {
+    resolve(module)
+  })
+}
+
 const test = (resolve) => {
   import('components/test').then((module) => {
     resolve(module)
@@ -79,6 +85,11 @@ export default new Router({
     {
       path: '/editUserInfo',
       component: editUserInfo
+    },
+    {
+      path: '/editPlaylistInfo/:id',
+      name: 'editPlaylistInfo',
+      component: editPlaylistInfo
     },
     {
       path: '/songListView/:id',
