@@ -6,7 +6,7 @@
           <div class="category-label-midden">
             <scroll ref="scroll" class="category-label-scroll" :data="categorySub">
               <div>
-                <p class="title">选择合适的标签，最多可选{{select}}<span class="color-main">3</span>个</p>
+                <p class="title">选择合适的标签，最多可选<span class="color-main">3</span>个</p>
                 <div class="category-label-list">
                   <div class="category-label-item clearfix" v-for="(item, index) in categoryTag" :key="index">
                     <span class="tags left">{{item}}</span>

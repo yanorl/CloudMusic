@@ -227,3 +227,45 @@ export function playlistTracks (params) {
   const url = '/playlist/tracks'
   return OriginAxios(url, params)
 }
+
+// 获取歌手单曲
+export function artists (params) {
+  const url = '/artists'
+  return OriginAxios(url, params)
+}
+
+// 获取歌手 mv
+export function artistsMv (params) {
+  const url = '/artists/mv'
+  return OriginAxios(url, params)
+}
+
+// 获取歌手专辑
+export function artistAlbum (params) {
+  const url = '/artist/album'
+  return OriginAxios(url, params)
+}
+
+// 获取专辑内容
+export function album (params) {
+  const url = '/album'
+  return OriginAxios(url, params)
+}
+
+// 获取歌手描述
+export function artistDesc (params) {
+  const url = '/artist/desc'
+  return OriginAxios(url, params)
+}
+
+// 获取相似歌手
+export function simiArtist (params) {
+  const url = '/simi/artist'
+  return OriginAxios(url, params)
+}
+
+// 收藏/取消收藏歌手
+export function artistSub (params) {
+  const url = '/artist/sub'
+  return OriginAxios(url, params)
+}
