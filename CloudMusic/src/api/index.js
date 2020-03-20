@@ -269,3 +269,9 @@ export function artistSub (params) {
   const url = '/artist/sub'
   return OriginAxios(url, params)
 }
+
+// 获取 mv 数据
+export function mvDetail (params) {
+  const url = '/mv/detail'
+  return OriginAxios(url, params)
+}

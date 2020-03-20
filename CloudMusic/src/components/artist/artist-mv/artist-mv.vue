@@ -67,7 +67,7 @@ export default {
       })
     },
     clickItem (id) {
-      this.$router.push({name: 'mv', params: {mId: id}})
+      this.$router.push({name: 'mv', params: {mvid: id}})
     },
     getData (i) {
       let offsetNum = (i - 1) * this.limit
