@@ -1,6 +1,11 @@
 <template>
   <div class="artist-albums-box">
-    <song-list :songList="filteredSongList" :enabled="false" ref="songLists"></song-list>
+    <div class="artist-albums-content" :class="{'mores': moreFlow}">
+      <song-list :songList="filteredSongList" :enabled="false" ref="songLists"></song-list>
+    </div>
+    <div class="mores" v-if="moreFlow">
+      <span @click="changeHot">查看全部 ></span>
+    </div>
   </div>
 </template>
 
@@ -14,7 +19,8 @@ export default {
   name: 'artist-albums',
   data () {
     return {
-      songList: {}
+      songList: {},
+      moreFlow: false
     }
   },
   props: {
@@ -42,6 +48,9 @@ export default {
         if (res.code === ERR_OK) {
           this.songList = this._normalizeSongList(res.songs)
           this.albumName = res.album.name
+          if (res.songs.length > 10) {
+            this.moreFlow = true
+          }
         }
       })
     },
@@ -68,6 +77,9 @@ export default {
         }))
       })
       return map
+    },
+    changeHot () {
+      this.moreFlow = false
     }
   }
 }
@@ -75,4 +87,19 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
+  .artist-albums-box
+    .mores
+      text-align: right
+      font-size: $font-size-small
+      span
+        display: inline-block
+        padding: 10px
+        margin-right: 30px
+        cursor: pointer
+        &:hover
+          color: #fff
+    .artist-albums-content
+      &.mores
+        height: 350px
+        overflow: hidden
 </style>

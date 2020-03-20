@@ -157,6 +157,7 @@ export default {
       })
     },
     _subscribersList (commonParams = {}) {
+      console.log(this.totalCount - 1)
       const data = Object.assign({}, {uid: this.$route.params.userId, limit: this.pageNum, offset: this.totalCount - 1}, commonParams)
       playlist(data).then((res) => {
         if (res.code === ERR_OK) {

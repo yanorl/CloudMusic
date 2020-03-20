@@ -26,7 +26,7 @@
               <span>全部播放</span>
               <b>+</b>
             </li>
-            <li :class="{'disabled': MyList}" @click="clickFavorite">
+            <li :class="{'disabled': MyList, 'gray' : songlistViewArray.subscribed}" @click="clickFavorite">
               <i class="fa fa-calendar-plus-o" :class="subscribed" aria-hidden="true"></i>
               <span>
                 <template v-if="songlistViewArray.subscribed">已</template>收藏 ( {{songlistViewArray.subscribedCount}} )</span>
@@ -206,6 +206,9 @@ export default {
            margin-right: 10px
            &.disabled
              color: #292929
+           &.gray
+             border: 1px solid #666
+             color: #666
            i
              font-size: $font-size-large
              vertical-align: middle

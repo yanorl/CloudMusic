@@ -13,7 +13,7 @@
         </div>
         <div class="artist-button clearfix">
           <ul>
-            <li @click="clickFavorite">
+            <li @click="clickFavorite" :class="{'gray' : songlistViewArray.followed}">
               <i class="fa fa-calendar-plus-o" :class="subscribed" aria-hidden="true"></i>
               <span>
                 <template v-if="songlistViewArray.followed">已</template>收藏</span>
@@ -137,6 +137,9 @@ export default {
            margin-right: 10px
            &.disabled
              color: #292929
+           &.gray
+             border: 1px solid #666
+             color: #666
            i
              font-size: $font-size-large
              vertical-align: middle

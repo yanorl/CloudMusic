@@ -1,6 +1,6 @@
 <template>
   <div class="artist-box">
-    <scroll ref="scroll" :data="[...songlistViewArray] && [...songList]" class="artist-wrap">
+    <scroll ref="scroll" :data="[...songlistViewArray] && [...songList]" class="artist-wrap" :pullup="pullup" :beforeScroll="beforeScroll"  @scrollToEnd="albumsMore">
       <div class="artist-content">
         <artist-info :songlistViewArray="songlistViewArray" @cancelSubscribed="showConfirmFavorite" @confimSubscribed="confimSubscribed"></artist-info>
         <div class="tab-box clearfix">
@@ -80,7 +80,7 @@ import SongList from 'base/song-list/song-list'
 import Confirm from 'base/confirm/confirm'
 import Alert from 'base/alert/alert'
 import SongListClass from 'common/js/songListClass'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import { timeStamp } from 'common/js/util'
 
 export default {
@@ -103,7 +103,13 @@ export default {
       alert: {
         icon: 'fa-check-circle',
         text: '收藏成功！'
-      }
+      },
+      totalCount: '',
+      pullup: true,
+      beforeScroll: true,
+      hasMore: true,
+      page: 0,
+      limit: 20
     }
   },
   computed: {
@@ -111,22 +117,9 @@ export default {
       if (this.songList.datas) {
         return this.songList.datas.items
       }
-    },
-    ...mapGetters([
-      'watchSongListUpdata'
-    ])
+    }
   },
   watch: {
-    $route: function (newRouter, oldRouter) {
-      this._artists()
-      this.current = 0
-      this.scrollTop()
-    },
-    watchSongListUpdata (newDate, oldDate) {
-      if (newDate !== oldDate) {
-        this._artists()
-      }
-    }
   },
   created () {
     this._artists()
@@ -169,6 +162,7 @@ export default {
         if (res.code === ERR_OK) {
           // console.log(res)
           this.songlistViewArray = res.artist
+          this.totalCount = res.artist.albumSize
           this.songList = this._normalizeSongList(res.hotSongs)
           // console.log(this.songList)
           if (this.$refs.songLists) {
@@ -180,11 +174,16 @@ export default {
         }
       })
     },
-    _artistAlbum () {
-      artistAlbum({id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
+    _artistAlbum (commonParams = {}) {
+      const data = Object.assign({}, {id: this.$route.params.id, limit: this.limit}, commonParams)
+      artistAlbum(data).then((res) => {
         if (res.code === ERR_OK) {
           // console.log(res)
-          this.hotAlbums = res.hotAlbums
+          this.hasMore = res.more
+          let list = res.hotAlbums
+          list.forEach((item) => {
+            this.hotAlbums.push(item)
+          })
         }
       })
     },
@@ -240,6 +239,14 @@ export default {
       if (date) {
         return timeStamp(date)
       }
+    },
+    albumsMore () {
+      if (!this.hasMore) {
+        return
+      }
+      this.page++
+      let offsetNum = (this.page - 1) * this.limit
+      this._artistAlbum({offset: offsetNum})
     },
     ...mapActions([
       'selectPlay'
