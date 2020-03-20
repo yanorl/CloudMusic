@@ -49,7 +49,7 @@
           </div>
         </div>
         <div class="tab-content" v-if="current === 1">
-          1
+          <artist-mv :artistId="$route.params.id" :totalCount="songlistViewArray.mvSize"></artist-mv>
         </div>
         <div class="tab-content" v-if="current === 2">
           <artist-des :artistId="$route.params.id"></artist-des>
@@ -76,6 +76,7 @@ import artistInfo from 'components/artist/artist-info/artist-info'
 import artistAlbums from 'components/artist/artist-albums/artist-albums'
 import artistDes from 'components/artist/artist-des/artist-des'
 import artistSimilar from 'components/artist/artist-similar/artist-similar'
+import artistMv from 'components/artist/artist-mv/artist-mv'
 import SongList from 'base/song-list/song-list'
 import Confirm from 'base/confirm/confirm'
 import Alert from 'base/alert/alert'
@@ -104,7 +105,6 @@ export default {
         icon: 'fa-check-circle',
         text: '收藏成功！'
       },
-      totalCount: '',
       pullup: true,
       beforeScroll: true,
       hasMore: true,
@@ -120,6 +120,12 @@ export default {
     }
   },
   watch: {
+    $route: function (newRouter, oldRouter) {
+      this._artists()
+      this.current = 0
+      this.hotAlbums = []
+      this.scrollTop()
+    }
   },
   created () {
     this._artists()
@@ -133,6 +139,7 @@ export default {
     artistAlbums,
     artistDes,
     artistSimilar,
+    artistMv,
     Confirm,
     Alert
   },
@@ -162,14 +169,10 @@ export default {
         if (res.code === ERR_OK) {
           // console.log(res)
           this.songlistViewArray = res.artist
-          this.totalCount = res.artist.albumSize
           this.songList = this._normalizeSongList(res.hotSongs)
           // console.log(this.songList)
           if (this.$refs.songLists) {
             this.$refs.songLists.disable()
-          }
-          if (this.songList.datas) {
-            this.thead = this.songList.datas.thead
           }
         }
       })
@@ -241,12 +244,14 @@ export default {
       }
     },
     albumsMore () {
-      if (!this.hasMore) {
-        return
+      if (this.current === 0) {
+        if (!this.hasMore) {
+          return
+        }
+        this.page++
+        let offsetNum = (this.page - 1) * this.limit
+        this._artistAlbum({offset: offsetNum})
       }
-      this.page++
-      let offsetNum = (this.page - 1) * this.limit
-      this._artistAlbum({offset: offsetNum})
     },
     ...mapActions([
       'selectPlay'

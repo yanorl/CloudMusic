@@ -8,7 +8,7 @@
             <template v-if="hotComments.length > 0 || comments.length > 0">
               <review-list :commentsData="hotComments" reviewTitle="精彩评论" @rpName="rpName" type="2" @updateReview="_commentReview" :resourcesId="$route.params.id"></review-list>
               <review-list :commentsData="comments" :reviewTitle="formatReviewTitle" @rpName="rpName" type="2" @updateReview="_commentReview" :resourcesId="$route.params.id"></review-list>
-              <div class="pagination-box">
+              <div class="pagination-box" v-if="comments.length">
                 <pagination :totalCount="commentsData.total" :limit="limit" :currentPage="currentPage" @turn="getData"></pagination>
               </div>
             </template>

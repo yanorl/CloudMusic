@@ -41,13 +41,13 @@ export default {
     _simiArtist () {
       simiArtist({id: this.artistId, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
-          console.log(res)
+          // console.log(res)
           this.artists = res.artists
         }
       })
     },
     clickItem (id) {
-      this.$router.push({name: 'artist', params: {userId: id}})
+      this.$router.push({name: 'artist', params: {id: id.toString()}})
     }
   }
 }

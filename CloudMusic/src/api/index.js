@@ -235,8 +235,8 @@ export function artists (params) {
 }
 
 // 获取歌手 mv
-export function artistsMv (params) {
-  const url = '/artists/mv'
+export function artistMv (params) {
+  const url = '/artist/mv'
   return OriginAxios(url, params)
 }
 
