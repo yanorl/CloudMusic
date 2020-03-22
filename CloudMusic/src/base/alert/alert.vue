@@ -33,7 +33,7 @@ export default {
     position: fixed
     top: 50%
     transform: translate(-50%,-50%)
-    z-index: 998
+    z-index: 9999999
     left: 50%
     &.alert-fade-enter-active
       animation: alert-fadein 0.3s

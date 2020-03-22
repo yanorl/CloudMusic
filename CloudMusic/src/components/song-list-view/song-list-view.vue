@@ -26,7 +26,9 @@
           </ul>
         </div>
         <song-list v-if="current === 0" :songList="filteredSongList" :query="query" :thead="thead" :showLoading="showLoading" :enabled="false" ref="songLists"></song-list>
-        <review v-if="current === 1" @scrollTop="scrollTop"></review>
+        <div ref="Review">
+          <review v-if="current === 1" @scrollTop="scrollToElement"></review>
+        </div>
         <subscribers-list v-if="current === 2" :subscribedCount="songlistViewArray.subscribedCount" @scrollTop="scrollTop"></subscribers-list>
       </div>
     </scroll>
@@ -44,10 +46,10 @@ import { songlistView, playlistSubscribe, tagsUpdate } from 'api'
 import { ERR_OK } from 'api/config'
 import Scroll from 'base/scroll/Scroll'
 import Loading from 'base/loading/loading'
-import Review from 'base/song-list-view/review/review'
+import Review from 'components/song-list-view/review/review'
 import SubscribersList from 'base/subscribers-list/subscribers-list'
 // import { } from common/js/util'
-import SongListViewInfo from 'base/song-list-view/song-list-view-info/song-list-view-info'
+import SongListViewInfo from 'components/song-list-view/song-list-view-info/song-list-view-info'
 import SongList from 'base/song-list/song-list'
 import Confirm from 'base/confirm/confirm'
 import Alert from 'base/alert/alert'
@@ -192,6 +194,9 @@ export default {
     },
     scrollTop () {
       this.$refs.scroll.scrollTo(0, 0)
+    },
+    scrollToElement () {
+      this.$refs.scroll.scrollToElement(this.$refs.Review, 0)
     },
     toggle (index) {
       this.current = index
