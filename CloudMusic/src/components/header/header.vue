@@ -1,10 +1,10 @@
 <template>
   <div class="header-box">
     <div class="header-aside">
-      <span class="previous">
+      <span class="previous cursor" @click="previous">
         <i class="fa fa-angle-left" aria-hidden="true"></i>
       </span>
-      <span class="next">
+      <span class="next cursor" @click="next">
         <i class="fa fa-angle-right" aria-hidden="true"></i>
       </span>
     </div>
@@ -63,6 +63,14 @@ export default {
   },
   components: {
     Search
+  },
+  methods: {
+    next () {
+      this.$router.go(1)
+    },
+    previous () {
+      this.$router.go(-1)
+    }
   }
 }
 </script>

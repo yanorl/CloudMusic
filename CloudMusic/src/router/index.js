@@ -8,6 +8,12 @@ Router.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
 }
 
+const home = (resolve) => {
+  import('components/home/home').then((module) => {
+    resolve(module)
+  })
+}
+
 const recommend = (resolve) => {
   import('components/recommend/recommend').then((module) => {
     resolve(module)
@@ -33,7 +39,7 @@ const editUserInfo = (resolve) => {
 }
 
 const songListView = (resolve) => {
-  import('base/song-list-view/song-list-view').then((module) => {
+  import('components/song-list-view/song-list-view').then((module) => {
     resolve(module)
   })
 }
@@ -50,6 +56,24 @@ const album = (resolve) => {
   })
 }
 
+const editPlaylistInfo = (resolve) => {
+  import('components/edit-playlist-info/edit-playlist-info').then((module) => {
+    resolve(module)
+  })
+}
+
+const mv = (resolve) => {
+  import('components/mv/mv').then((module) => {
+    resolve(module)
+  })
+}
+
+const video = (resolve) => {
+  import('components/video/video').then((module) => {
+    resolve(module)
+  })
+}
+
 const test = (resolve) => {
   import('components/test').then((module) => {
     resolve(module)
@@ -60,40 +84,58 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/recommend'
+      component: home,
+      redirect: '/recommend',
+      children: [
+        {
+          path: '/recommend',
+          component: recommend
+        },
+        {
+          path: '/user/:userId',
+          name: 'user',
+          component: user
+        },
+        {
+          path: '/userRecord/:userId',
+          name: 'userRecord',
+          component: userRecord
+        },
+        {
+          path: '/editUserInfo',
+          component: editUserInfo
+        },
+        {
+          path: '/editPlaylistInfo/:id',
+          name: 'editPlaylistInfo',
+          component: editPlaylistInfo
+        },
+        {
+          path: '/songListView/:id',
+          name: 'songListView',
+          component: songListView
+        },
+        {
+          path: '/artist/:id',
+          name: 'artist',
+          component: artist
+        },
+        {
+          path: '/album/:id',
+          name: 'album',
+          component: album
+        }
+      ]
     },
     {
-      path: '/recommend',
-      component: recommend
+      path: '/mv/:mvid',
+      name: 'mv',
+      component: mv
     },
     {
-      path: '/user/:userId',
-      name: 'user',
-      component: user
-    },
-    {
-      path: '/userRecord/:userId',
-      name: 'userRecord',
-      component: userRecord
-    },
-    {
-      path: '/editUserInfo',
-      component: editUserInfo
-    },
-    {
-      path: '/songListView/:id',
-      name: 'songListView',
-      component: songListView
-    },
-    {
-      path: '/artist/:id',
-      name: 'artist',
-      component: artist
-    },
-    {
-      path: '/album/:id',
-      name: 'album',
-      component: album
+      path: '/video/:id',
+      name: 'video',
+      component: video
     },
     {
       path: '/test',

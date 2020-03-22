@@ -1,6 +1,6 @@
 <!--分页-->
 <template>
-  <div class="pagination-wrap" v-if="totalPage>1">
+  <div class="pagination-wrap" v-if="totalPage > 1">
     <ul class="pagination-list-box clearfix">
       <li class="prev" :class="{'disabled':currentPage <= 1}" @click="prev()">
         <i class="fa fa-angle-left"></i>

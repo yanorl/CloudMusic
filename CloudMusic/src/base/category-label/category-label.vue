@@ -41,7 +41,7 @@
 <script>
 import PopUps from 'base/pop-ups/pop-ups'
 import Scroll from 'base/scroll/Scroll'
-import { playlistCatlist, tagsUpdate } from 'api'
+import { playlistCatlist } from 'api'
 import { ERR_OK } from 'api/config'
 
 export default {
@@ -53,23 +53,24 @@ export default {
       categoryTag: []
     }
   },
-  props: {
-    songListId: {
-      type: Number,
-      default: 0
-    }
-  },
   watch: {
     selectBox (newData, oldData) {
-      console.log(newData.length)
       if (newData.length >= 3) {
-        this.checkMax()
+        this.$nextTick(() => {
+          this.checkMax()
+        })
       } else {
-        this.allCheck()
+        this.$nextTick(() => {
+          this.allCheck()
+        })
       }
     }
   },
-  computed: {
+  props: {
+    select: {
+      type: Array,
+      default: () => []
+    }
   },
   created () {
     this._playlistCatlist()
@@ -88,10 +89,12 @@ export default {
       })
     },
     showPop () {
+      this.selectBox = this.select
       this.$refs.popUps.show()
     },
     checkMax () {
       let items = this.$refs.checkbox
+      console.log(items[0].checked)
       for (var i = 0; i < items.length; i++) {
         if (!items[i].checked) {
           items[i].disabled = true
@@ -106,16 +109,11 @@ export default {
         items[i].disabled = false
       }
     },
+    popUpsClose () {
+      this.$refs.popUps.close()
+    },
     submit () {
-      if (this.selectBox.length <= 3) {
-        tagsUpdate({id: this.songListId, tags: '华语'}).then((res) => {
-          if (res.code === ERR_OK) {
-            console.log(res)
-            this.$refs.popUps.close()
-            this.$emit('updateSongList')
-          }
-        })
-      }
+      this.$emit('updateSongList', this.selectBox)
     }
   }
 }

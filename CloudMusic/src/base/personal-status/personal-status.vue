@@ -9,7 +9,12 @@
               <i class="fa fa-mobile" aria-hidden="true"></i>
             </span>
           </div>
-          <login @registeredPage="registeredPage" @hide="hide" :agreeCheck="agreeCheck"></login>
+          <div class="login-type" v-if="typeLogin">
+            <login @registeredPage="registeredPage" @hide="hide" :agreeCheck="agreeCheck"></login>
+          </div>
+          <div class="reg-typ" v-if="!typeLogin">
+            <registered @registeredPage="registeredPage"></registered>
+          </div>
           <div class="personal-icon">
             <ul>
               <li>
@@ -26,7 +31,7 @@
               </li>
             </ul>
           </div>
-          <div class="agree-box">
+          <div class="agree-box" v-if="typeLogin">
             <div class="agree-wrap">
               <label>
                 <input type="checkbox" class="checkbox" v-model="agreeCheck" value="true">
@@ -42,7 +47,8 @@
 </template>
 
 <script>
-import login from 'base/login/login'
+import login from 'components/login/login'
+import Registered from 'components/registered/registered'
 export default {
   name: 'personal-status',
   data () {
@@ -51,17 +57,14 @@ export default {
       inputFirst: 'tel',
       inputSecond: 'password',
       typeLogin: true,
-      placeholder: {
-        first: '请输入手机号',
-        second: '请输入密码'
-      },
       agreeCheck: []
     }
   },
   created () {
   },
   components: {
-    login
+    login,
+    Registered
   },
   methods: {
     show () {
@@ -71,8 +74,8 @@ export default {
       this.showFlag = false
     },
     registeredPage () {
-      this.placeholder.second = '设置登录密码, 不少于6位'
-      this.typeLogin = false
+      // this.placeholder.second = '设置登录密码, 不少于6位'
+      this.typeLogin = !this.typeLogin
     }
   }
 }

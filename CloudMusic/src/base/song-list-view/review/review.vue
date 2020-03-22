@@ -8,7 +8,7 @@
             <template v-if="hotComments.length > 0 || comments.length > 0">
               <review-list :commentsData="hotComments" reviewTitle="精彩评论" @rpName="rpName" type="2" @updateReview="_commentReview" :resourcesId="$route.params.id"></review-list>
               <review-list :commentsData="comments" :reviewTitle="formatReviewTitle" @rpName="rpName" type="2" @updateReview="_commentReview" :resourcesId="$route.params.id"></review-list>
-              <div class="pagination-box">
+              <div class="pagination-box" v-if="comments.length">
                 <pagination :totalCount="commentsData.total" :limit="limit" :currentPage="currentPage" @turn="getData"></pagination>
               </div>
             </template>
@@ -31,7 +31,7 @@ import { ERR_OK } from 'api/config'
 import { reviewMixin } from 'common/js/mixin'
 import Alert from 'base/alert/alert'
 import ReviewForm from 'base/review-form/review-form'
-import ReviewList from 'base/review/review-list/review-list'
+import ReviewList from 'base/review-list/review-list'
 import Pagination from 'base/pagination/pagination'
 
 export default {

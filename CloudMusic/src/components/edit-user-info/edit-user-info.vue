@@ -206,7 +206,7 @@ export default {
 }
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
   .edit-user-info-box
     margin: 20px 0
@@ -251,11 +251,11 @@ export default {
        .botton-close
          border-color: #565454
          background: none
-  .avatar-img
-    float: left
-    margin-left: 50px
-    width: 145px
-    height: 145px
-    border-radius: 5px
-    overflow: hidden
+    .avatar-img
+      float: left
+      margin-left: 50px
+      width: 145px
+      height: 145px
+      border-radius: 5px
+      overflow: hidden
 </style>

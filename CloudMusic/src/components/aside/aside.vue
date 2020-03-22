@@ -242,6 +242,7 @@ export default {
       top: 159px
       bottom: $player-height
       width: $aisde-width
+      background: $asid-background
       z-index: 2
       .aside-content
         height: 100%

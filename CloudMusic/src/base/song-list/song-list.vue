@@ -38,6 +38,7 @@
               <td v-if="item.album && thead" v-html="changeColor(item.album, 'album')" @click="addComment($event)"></td>
               <td class="gray" v-if="item.duration && thead">{{formate(item.duration)}}</td>
               <td v-if="item.playCount" class="gray" width="130">{{item.playCount}} 次 {{item.fee}}</td>
+              <td class="gray" v-if="item.duration && !item.playCount && !thead" align="right" >{{formate(item.duration)}}</td>
             </tr>
           </tbody>
         </table>
