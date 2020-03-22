@@ -39,7 +39,7 @@ const editUserInfo = (resolve) => {
 }
 
 const songListView = (resolve) => {
-  import('base/song-list-view/song-list-view').then((module) => {
+  import('components/song-list-view/song-list-view').then((module) => {
     resolve(module)
   })
 }
@@ -64,6 +64,12 @@ const editPlaylistInfo = (resolve) => {
 
 const mv = (resolve) => {
   import('components/mv/mv').then((module) => {
+    resolve(module)
+  })
+}
+
+const video = (resolve) => {
+  import('components/video/video').then((module) => {
     resolve(module)
   })
 }
@@ -125,6 +131,11 @@ export default new Router({
       path: '/mv/:mvid',
       name: 'mv',
       component: mv
+    },
+    {
+      path: '/video/:id',
+      name: 'video',
+      component: video
     },
     {
       path: '/test',

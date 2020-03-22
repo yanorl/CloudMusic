@@ -1,7 +1,7 @@
 <template>
   <transition name="slide">
     <div class="medium-screen-box" v-show="MScreen">
-      <scroll class="medium-wrap" ref="scroll" :data="Object.entries(commentsData)">
+      <scroll class="medium-wrap" ref="scroll">
         <div class="medium-content">
           <div class="top">
             <div class="phonograph left">
@@ -54,43 +54,8 @@
             </div>
           </div>
           <div class="bottom">
-            <div class="review-wrap left">
-              <div class="title">
-                听友评论 <span>(已有{{total}}条评论)</span>
-              </div>
-              <div class="review-trigger" @click="changeReviewFlase">
-                <div class="left">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                  <span>发表评论</span>
-                </div>
-                <div class="right icon-box">
-                  <span cl><i aria-hidden="true" class="fa fa-smile-o"></i></span>
-                  <span>@</span>
-                </div>
-              </div>
-              <div class="review-form" v-show="reviewFlow">
-                <div class="review-form-content">
-                  <div class="review-form-title">
-                    <span class="close" @click="changeReviewTrue">X</span>
-                    <div class="title">{{currentSong.name}}</div>
-                  </div>
-                  <review-form ref="reviewForm" :rp="rp" :commentId="commentId" @tips="tips" @commentControl="_commentControl"></review-form>
-                </div>
-              </div>
-              <div class="review-list-wrap">
-                <div class="review-list-content">
-                  <template v-if="hotComments.length > 0 || comments.length > 0">
-                    <review-list :commentsData="hotComments" reviewTitle="精彩评论" @rpName="rpName" type="0" @updateReview="_commentReview" :resourcesId="currentSong.id.toString()"></review-list>
-                    <review-list :commentsData="comments" :reviewTitle="formatReviewTitle" @rpName="rpName" type="0" @updateReview="_commentReview" :resourcesId="currentSong.id.toString()"></review-list>
-                    <div class="pagination-box">
-                      <pagination :totalCount="commentsData.total" :limit="limit" :currentPage="currentPage" @turn="getData"></pagination>
-                    </div>
-                  </template>
-                  <template v-else>
-                    <p class="none-text">{{noneText}}</p>
-                  </template>
-                </div>
-              </div>
+            <div class="review-wrap left" ref="ReviewView">
+               <review ref="review" @changeReviewFlase="closeMediumScroll" @openMediumScroll="openMediumScroll" @scrollTop="scrollTop"></review>
             </div>
             <div class="other right">
               <div class="other-item simiPlaylist" v-if="simiPlaylists.length > 0">
@@ -164,19 +129,17 @@
 import { mapGetters, mapActions } from 'vuex'
 import Scroll from 'base/scroll/Scroll'
 import Alert from 'base/alert/alert'
-import ReviewForm from 'base/review-form/review-form'
-import ReviewList from 'base/review/review-list/review-list'
-import Pagination from 'base/pagination/pagination'
+import Review from 'components//medium-screen/review/review'
 import AddPlaylist from 'base/add-playlist/add-playlist'
-import { likeMixin, reviewMixin } from 'common/js/mixin'
-import { commentMusic, simiPlaylist, simiSong, simiUser } from 'api'
+import { likeMixin } from 'common/js/mixin'
+import { simiPlaylist, simiSong, simiUser } from 'api'
 import { ERR_OK } from 'api/config'
 import { forArray } from 'common/js/util'
 import SongListClass from 'common/js/songListClass'
 
 export default {
   name: 'medium-screen',
-  mixins: [likeMixin, reviewMixin],
+  mixins: [likeMixin],
   props: {
     MScreen: {
       type: Boolean,
@@ -194,7 +157,7 @@ export default {
   data () {
     return {
       AddFlow: false,
-      reviewFlow: false,
+      commentsData: {},
       simiPlaylists: [],
       simiSongs: [],
       simiUseras: []
@@ -206,7 +169,7 @@ export default {
         return
       }
       if (newSong !== oldSong) {
-        this._commentReview()
+        this.$refs.review.updateReview()
         this._simiPlaylist()
         this._simiSong()
         this._simiUser()
@@ -220,9 +183,6 @@ export default {
     ]),
     playClass () {
       return this.playing ? 'play' : 'pause'
-    },
-    total () {
-      return this.commentsData.total ? this.commentsData.total : 0
     }
   },
   created () {
@@ -230,9 +190,7 @@ export default {
   components: {
     Scroll,
     Alert,
-    ReviewList,
-    Pagination,
-    ReviewForm,
+    Review,
     AddPlaylist
   },
   methods: {
@@ -245,24 +203,6 @@ export default {
     },
     lricScrollTo () {
       this.$refs.lyricList.scrollTo(0, 0, 1000)
-    },
-    _commentReview (commonParams = {}, boolean) {
-      const data = Object.assign({}, commonParams, {id: this.currentSong.id, limit: this.limit, timestamp: (new Date()).valueOf()})
-      commentMusic(data).then((res) => {
-        if (res.code === ERR_OK) {
-          this.commentsData = res
-          this.comments = res.comments
-          if (boolean) {
-            this.hotComments = res.topComments
-          } else {
-            this.hotComments = res.hotComments
-          }
-        }
-      })
-    },
-    _commentControl (commonParams) {
-      const data = Object.assign({}, commonParams, {id: this.currentSong.id, type: 0, timestamp: (new Date()).valueOf()})
-      this.commentControlFn(data, true)
     },
     closeMediumScroll () {
       this.$refs.scroll.disable()
@@ -330,19 +270,11 @@ export default {
     ...mapActions([
       'insertSong'
     ]),
-    changeReviewFlase () {
-      this.closeMediumScroll()
-      this.reviewFlow = true
-    },
-    changeReviewTrue () {
-      this.openMediumScroll()
-      this.reviewFlow = false
-    },
-    otherRp () {
-      this.changeReviewFlase()
-    },
     clickAlbum (id) {
       console.log(id)
+    },
+    scrollTop () {
+      this.$refs.scroll.scrollTo(0, 0)
     },
     addFlows () {
       let that = this
@@ -538,45 +470,6 @@ export default {
                     color: #787878
           .review-wrap
             width: 665px
-            .title
-              span
-                margin-left: 15px
-                font-size: $font-size-small
-            .review-trigger
-              height: 30px
-              line-height: 30px
-              background: #2f2f2f
-              padding: 0 10px
-              border-radius: 5px
-              margin: 15px 0
-              .icon-box
-                span
-                  margin-left: 5px
-                  i
-                    font-size: $font-size-medium
-                    vertical-align: middle
-    .review-form
-      position: fixed
-      left: 50%
-      transform: translate(-50%, -80%)
-      .review-form-content
-        background: #292929
-        width: 500px
-        padding: 20px 15px
-        border-radius: 10px
-        .review-form-title
-          font-size: $font-size-medium
-          text-align: center
-          position: relative
-          .close
-            position: absolute
-            left: 0
-            top: 50%
-            transform: translate(0, -50%)
-            color: #565656
-            cursor: pointer
-        .button-wrap
-          background: $color-main
   @keyframes rotate
     0%
       transform: rotate(0)

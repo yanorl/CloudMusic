@@ -31,7 +31,7 @@ import { ERR_OK } from 'api/config'
 import { reviewMixin } from 'common/js/mixin'
 import Alert from 'base/alert/alert'
 import ReviewForm from 'base/review-form/review-form'
-import ReviewList from 'base/review/review-list/review-list'
+import ReviewList from 'base/review-list/review-list'
 import Pagination from 'base/pagination/pagination'
 
 export default {

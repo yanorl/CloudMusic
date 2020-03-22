@@ -1,5 +1,5 @@
 <template>
-  <div class="mv-box">
+  <div class="video-view-box">
     <div class="mv-view-box">
       <scroll class="mv-wrap" ref="scroll" :data="[...details]">
         <div class="mv-content">
@@ -23,16 +23,17 @@
 
 <script>
 import Scroll from 'base/scroll/Scroll'
-import Review from 'components/mv/review/review'
+import Review from 'components/video/review/review'
 import MvInfo from 'components/mv/mv-info/mv-info'
 import MvAside from 'components/mv/mv-aside/mv-aside'
 import Alert from 'base/alert/alert'
-import { mvDetail, mvUrl, simiMv, relatedAllvideo, mvSub } from 'api'
+import { videoDetail, videoUrl, relatedAllvideo, videoSub, mvSublist } from 'api'
 import { ERR_OK } from 'api/config'
 import VideoClass from 'common/js/videoClass'
+import { timeStamp } from 'common/js/util'
 
 export default {
-  name: 'mv',
+  name: 'video-view',
   data () {
     return {
       details: {},
@@ -45,7 +46,7 @@ export default {
         icon: 'fa-check-circle',
         text: '视频收藏成功！'
       },
-      title: 'MV详情'
+      title: '视频详情'
     }
   },
   watch: {
@@ -67,22 +68,29 @@ export default {
   },
   methods: {
     _all () {
-      this._mvDetail()
-      this._simiMv()
+      this._videoDetail()
       this._relatedAllvideo()
+      this._mvSublist()
     },
-    _mvDetail () {
-      mvDetail({mvid: this.$route.params.mvid, timestamp: (new Date()).valueOf()}).then((res) => {
+    _mvSublist () {
+      mvSublist({timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
-          this.details = this._normalize(res.data)
-          // console.log(this.details)
-          this.subed = res.subed
+          this.subed = res.data.some(({vid}) => vid === this.$route.params.id)
         }
       })
-      mvUrl({id: this.$route.params.mvid, timestamp: (new Date()).valueOf()}).then((res) => {
+    },
+    _videoDetail () {
+      videoDetail({id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
-          this.url = res.data.url
           // console.log(res)
+          this.details = this._normalize(res.data)
+          // this.subed = res.subed
+        }
+      })
+      videoUrl({id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
+        if (res.code === ERR_OK) {
+          // console.log(res)
+          this.url = res.urls[0].url
         }
       })
     },
@@ -90,36 +98,28 @@ export default {
       // console.log(item)
       return {...new VideoClass({
         url: item.brs,
-        posterImg: item.cover,
-        name: item.name,
-        artists: item.artists,
-        publishTime: item.publishTime,
-        playCount: item.playCount,
+        posterImg: item.coverUrl,
+        name: item.title,
+        artists: [{'name': item.creator.nickname, 'id': item.creator.userId}],
+        publishTime: timeStamp(item.publishTime),
+        playCount: item.playTime,
         briefDesc: item.briefDesc,
         desc: item.desc,
-        likeCount: item.likeCount,
-        subCount: item.subCount
+        likeCount: item.praisedCount,
+        subCount: item.subscribeCount
       })}
     },
-    _simiMv () {
-      simiMv({mvid: this.$route.params.mvid, timestamp: (new Date()).valueOf()}).then((res) => {
-        if (res.code === ERR_OK) {
-          // console.log(res)
-          this.mvs = res.mvs
-        }
-      })
-    },
     _relatedAllvideo () {
-      relatedAllvideo({id: this.$route.params.mvid, timestamp: (new Date()).valueOf()}).then((res) => {
+      relatedAllvideo({id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           // console.log(res)
           this.relatedVideo = res.data
         }
       })
     },
-    _mvSub (t) {
+    _videoSub (t) {
       let that = this
-      mvSub({t, mvid: this.$route.params.mvid, timestamp: (new Date()).valueOf()}).then((res) => {
+      videoSub({t, id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           if (t === 1) {
             that.alert.text = '视频收藏成功！'
@@ -129,16 +129,17 @@ export default {
           that.alertFlow = true
           setTimeout(() => {
             that.alertFlow = false
-            that._mvDetail()
+            that._videoDetail()
+            that._mvSublist()
           }, 1500)
         }
       })
     },
     clickFavorite () {
       if (this.subed) {
-        this._mvSub(2)
+        this._videoSub(2)
       } else {
-        this._mvSub(1)
+        this._videoSub(1)
       }
     },
     clickName (id) {

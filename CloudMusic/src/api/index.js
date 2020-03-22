@@ -275,3 +275,69 @@ export function mvDetail (params) {
   const url = '/mv/detail'
   return OriginAxios(url, params)
 }
+
+// mv 地址
+export function mvUrl (params) {
+  const url = '/mv/url'
+  return OriginAxios(url, params)
+}
+
+// 相关视频
+export function relatedAllvideo (params) {
+  const url = '/related/allvideo'
+  return OriginAxios(url, params)
+}
+
+// 相似 mv
+export function simiMv (params) {
+  const url = '/simi/mv'
+  return OriginAxios(url, params)
+}
+
+// mv 评论
+export function commentMv (params) {
+  const url = '/comment/mv'
+  return OriginAxios(url, params)
+}
+
+// 收藏/取消收藏 MV
+export function mvSub (params) {
+  const url = '/mv/sub'
+  return OriginAxios(url, params)
+}
+
+// 资源点赞( MV,电台,视频)
+export function resourceLike (params) {
+  const url = '/resource/like'
+  return OriginAxios(url, params)
+}
+
+// 视频详情
+export function videoDetail (params) {
+  const url = '/video/detail'
+  return OriginAxios(url, params)
+}
+
+// 获取视频播放地址
+export function videoUrl (params) {
+  const url = '/video/url'
+  return OriginAxios(url, params)
+}
+
+// 收藏视频
+export function videoSub (params) {
+  const url = '/video/sub'
+  return OriginAxios(url, params)
+}
+
+// 视频评论
+export function commentVideo (params) {
+  const url = '/comment/video'
+  return OriginAxios(url, params)
+}
+
+// 收藏的 MV 列表
+export function mvSublist (params) {
+  const url = '/mv/sublist'
+  return OriginAxios(url, params)
+}

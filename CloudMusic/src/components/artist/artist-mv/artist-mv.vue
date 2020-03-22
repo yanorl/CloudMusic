@@ -1,6 +1,7 @@
 <template>
   <div class="artist-mv-box">
-    <div class="artist-mv-content">
+    <div v-if="artists.length > 0">
+      <div class="artist-mv-content">
       <ul class="clearfix">
         <li v-for="(item, index) in artists" :key="index" @click="clickItem(item.id)">
           <div class="img-box">
@@ -19,6 +20,10 @@
     </div>
     <div class="pagination-box" v-if="artists.length">
       <pagination :totalCount="totalCount" :limit="limit" :currentPage="currentPage" @turn="getData"></pagination>
+    </div>
+    </div>
+    <div v-if="!artists.length">
+      <p>没有相关MV</p>
     </div>
   </div>
 </template>

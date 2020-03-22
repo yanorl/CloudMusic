@@ -149,16 +149,16 @@ export const reviewMixin = {
         text: '写点东西吧，内容不能为空哦！'
       },
       alertFlow: false,
-      commentId: '',
-      comments: [],
-      commentsData: {},
-      hotComments: []
+      commentId: ''
+      // comments: [],
+      // commentsData: {},
+      // hotComments: []
     }
   },
   computed: {
-    formatReviewTitle () {
-      return `最新评论（${this.commentsData.total}）`
-    }
+    // formatReviewTitle () {
+    //   return `最新评论（${this.commentsData.total}）`
+    // }
   },
   methods: {
     commentControlFn (data, other = false) {
@@ -166,7 +166,7 @@ export const reviewMixin = {
         if (res.code === ERR_OK) {
           if (other) {
             this.reviewFlow = false
-            this.openMediumScroll()
+            this.$emit('openMediumScroll')
           }
           this.$refs.reviewForm.reviewContentEmpty()
           this.alert = {
@@ -182,14 +182,15 @@ export const reviewMixin = {
             }
             this.$refs.reviewForm.textareaFocus()
           }, 1500)
-          this._commentReview()
+          // this._commentReview()
+          this.updateReview()
         }
       })
     },
     getData (i) {
       let offsetNum = (i - 1) * this.limit
       this.currentPage = i
-      this._commentReview({offset: offsetNum}, true)
+      this.updateReview({offset: offsetNum})
     },
     tips () {
       this.$refs.reviewForm.textareaFocus()
