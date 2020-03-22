@@ -5,10 +5,10 @@
         <review-form ref="reviewForm" :rp="rp" :commentId="commentId" @tips="tips" @commentControl="_commentControl"></review-form>
         <div class="review-list-wrap">
           <div class="review-list-content">
-            <template v-if="hotComments.length > 0 || comments.length > 0">
+            <template v-if="comments.length > 0">
               <review-list :commentsData="hotComments" reviewTitle="精彩评论" @rpName="rpName" :type="type" @updateReview="updateReview" :resourcesId="id"></review-list>
               <review-list :commentsData="comments" :reviewTitle="reviewTitle" @rpName="rpName" :type="type" @updateReview="updateReview" :resourcesId="id"></review-list>
-              <div class="pagination-box" v-if="comments.length">
+              <div class="pagination-box" v-if="comments.length > 0">
                 <pagination :totalCount="Number(totalCount)" :limit="limit" :currentPage="currentPage" @turn="getData"></pagination>
               </div>
             </template>

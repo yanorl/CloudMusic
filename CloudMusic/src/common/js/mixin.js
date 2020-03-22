@@ -150,15 +150,7 @@ export const reviewMixin = {
       },
       alertFlow: false,
       commentId: ''
-      // comments: [],
-      // commentsData: {},
-      // hotComments: []
     }
-  },
-  computed: {
-    // formatReviewTitle () {
-    //   return `最新评论（${this.commentsData.total}）`
-    // }
   },
   methods: {
     commentControlFn (data, other = false) {
