@@ -192,6 +192,8 @@ export default {
        .creator-name
          margin: 0 5px
          color: #72ade7
+         &:hover
+           color: #89b7e4
        .create-time
          color: #7b7b7b
      .song-list-view-button
