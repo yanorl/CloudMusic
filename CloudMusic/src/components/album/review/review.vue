@@ -1,11 +1,11 @@
 <template>
   <div class="review-box">
-    <review-view type="2" :id="$route.params.id" :hotComments="hotComments" :comments="comments" :totalCount="totalCount" @commentReview="commentReview" @scrollTop="scrollTop"></review-view>
+    <review-view type="3" :id="$route.params.id" :hotComments="hotComments" :comments="comments" :totalCount="totalCount" @commentReview="commentReview" @scrollTop="scrollTop"></review-view>
   </div>
 </template>
 
 <script>
-import { commentPlayList } from 'api'
+import { commentAlbum } from 'api'
 import { ERR_OK } from 'api/config'
 import reviewView from 'base/review-view/review-view'
 
@@ -30,7 +30,7 @@ export default {
     },
     _commentReview (commonParams = {}) {
       const data = Object.assign({}, commonParams, {id: this.$route.params.id, limit: this.limit, timestamp: (new Date()).valueOf()})
-      commentPlayList(data).then((res) => {
+      commentAlbum(data).then((res) => {
         if (res.code === ERR_OK) {
           this.totalCount = res.total.toString()
           this.comments = res.comments

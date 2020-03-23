@@ -252,6 +252,24 @@ export function album (params) {
   return OriginAxios(url, params)
 }
 
+// 专辑评论
+export function commentAlbum (params) {
+  const url = '/comment/album'
+  return OriginAxios(url, params)
+}
+
+// 专辑动态信息
+export function albumDynamic (params) {
+  const url = '/album/detail/dynamic'
+  return OriginAxios(url, params)
+}
+
+// 收藏/取消收藏专辑
+export function albumSub (params) {
+  const url = '/album/sub'
+  return OriginAxios(url, params)
+}
+
 // 获取歌手描述
 export function artistDesc (params) {
   const url = '/artist/desc'

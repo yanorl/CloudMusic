@@ -65,7 +65,7 @@ export default {
       .content
         pre
           white-space: pre-wrap
-        font-size: $font-size-small
-        color: $color-gray
-        line-height: 2
+          font-size: $font-size-small
+          color: $color-gray
+          line-height: 2
 </style>
