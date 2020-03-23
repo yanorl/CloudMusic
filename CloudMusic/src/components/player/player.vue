@@ -11,7 +11,7 @@
               <img :src="currentSong.image" width="100%">
             </div>
             <div class="song-detail">
-              <div class="song-des">
+              <div class="song-des ellipsis">
                 <span class="song-name">{{currentSong.name}} <span v-if="currentSong.alia">({{currentSong.alia}})</span></span> -
                 <span class="singer ellipsis" v-for="(item, index) in currentSong.author" :key="index">
                   <router-link :to="'/artist/'+ item.id">{{item.name}}</router-link>
@@ -429,18 +429,20 @@ export default {
                 opacity: 0
             .song-detail
               margin-left : 10px
-              .singer
-                display: inline-block
-                max-width: 230px
-                vertical-align: middle
-                .mark
-                  margin: 0 5px
+              .song-des
+                max-width: 500px;
+                .singer
                   display: inline-block
-              .song-duration
-                margin-top: 5px
-              .singer,.song-duration
-                font-size: $font-size-small
-                color: $color-i
+                  max-width: 230px
+                  vertical-align: middle
+                  .mark
+                    margin: 0 5px
+                    display: inline-block
+                .song-duration
+                  margin-top: 5px
+                .singer,.song-duration
+                  font-size: $font-size-small
+                  color: $color-i
            .control-box
              display: flex
              align-items: center

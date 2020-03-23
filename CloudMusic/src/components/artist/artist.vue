@@ -32,13 +32,13 @@
             </div>
           </div>
           <div class="tab-item clearfix" v-for="(list, i) in hotAlbums" :key="i">
-            <div class="tab-img left">
+            <div class="tab-img left" @click="ClickAlbum(list.id)">
               <img :src="list.picUrl" width="100%">
               <p>{{normalDate(list.publishTime)}}</p>
             </div>
             <div class="tab-content-list letf">
               <div class="title">
-                <span>{{list.name}}</span>
+                <span @click="ClickAlbum(list.id)">{{list.name}}</span>
                 <span class="icon-box">
                   <i class="fa fa-play-circle-o"></i>
                   <i class="fa fa-calendar-plus-o"></i>
@@ -252,6 +252,10 @@ export default {
         let offsetNum = (this.page - 1) * this.limit
         this._artistAlbum({offset: offsetNum})
       }
+    },
+    ClickAlbum (id) {
+      console.log(id)
+      this.$router.push('/album/' + id)
     },
     ...mapActions([
       'selectPlay'
