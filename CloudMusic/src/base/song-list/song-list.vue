@@ -135,6 +135,7 @@ export default {
       'savePlayListRouter'
     ]),
     selectItem (item, index) {
+      console.log(item)
       if (item.st === 0) {
         this.selectPlay({
           list: this.songList,
@@ -155,7 +156,7 @@ export default {
         value = this.forArray(value, link)
       }
       if (this.query && this.query.length > 0) {
-        const result = value.replace(new RegExp(this.query, 'g'), `<p style="display: inline-block; color: #94d9ff;">${this.query}</p>`)
+        const result = value.replace(new RegExp(this.query, 'gi'), `<p style="display: inline-block; color: #94d9ff;">${this.titleCase5(this.query)}</p>`)
         return result
       } else {
         return value
@@ -171,6 +172,9 @@ export default {
         }
       }
       return html
+    },
+    titleCase5 (str) {
+      return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
     },
     addComment (event) {
       this.routerLink(event.target.dataset.id, event.target.dataset.link)

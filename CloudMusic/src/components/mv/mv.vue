@@ -171,7 +171,6 @@ export default {
     background: #1b1a1a
     position: fixed
     top: 76px
-    z-index: 999
     .mv-wrap
       height: 100%
       overflow: hidden
