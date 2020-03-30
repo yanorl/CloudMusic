@@ -141,8 +141,8 @@ export default {
         this._mvSub(1)
       }
     },
-    clickName (id) {
-      this.$router.push({name: 'artist', params: {id: id.toString()}})
+    clickName (parm) {
+      this.$router.push(parm)
     },
     clickLike () {
     },
@@ -171,7 +171,6 @@ export default {
     background: #1b1a1a
     position: fixed
     top: 76px
-    z-index: 999
     .mv-wrap
       height: 100%
       overflow: hidden

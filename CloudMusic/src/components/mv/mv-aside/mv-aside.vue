@@ -18,7 +18,7 @@
           </div>
           <div class="des left">
             <p class="mv-name" @click="clickMvs(item.id)">{{item.name}}</p>
-            <p class="artist-name ellipsis" @click="clickName(item.artistId)">{{item.artistName}}</p>
+            <p class="artist-name ellipsis" @click="clickName(item.type, item.artistId)">{{item.artistName}}</p>
           </div>
         </li>
       </ul>
@@ -43,7 +43,7 @@
             <p class="mv-name ellipsis" @click="clickVideo(item.vid, item.type)">
               <span class="tags" v-if="item.type == 0">mv</span>
               {{item.title}}</p>
-            <p class="artist-name ellipsis" @click="clickName(item.creator[0].userId)"> <span v-if="item.type !== 0">by</span> {{item.creator[0].userName}}</p>
+            <p class="artist-name ellipsis" @click="clickName(item.type, item.creator[0].userId)"> <span v-if="item.type !== 0">by</span> {{item.creator[0].userName}}</p>
           </div>
         </li>
       </ul>
@@ -79,8 +79,14 @@ export default {
     clickMvs (id) {
       this.$emit('clickMvs', id)
     },
-    clickName (id) {
-      this.$emit('clickName', id)
+    clickName (type, id) {
+      let parm
+      if (type === 0) {
+        parm = '/artist/'
+      } else if (type === 1) {
+        parm = '/user/'
+      }
+      this.$emit('clickName', parm + id)
     },
     clickVideo (id, type) {
       if (type === 0) {

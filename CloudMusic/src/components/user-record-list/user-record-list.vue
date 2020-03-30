@@ -8,7 +8,12 @@
             <li @click="clickItem(0)" :class="{'acitve': index === 0 }">所有时间</li>
           </ul>
         </div>
-        <song-list :songList="songList.items" :thead="songList.thead" :showLoading="showLoading"></song-list>
+        <div>
+          <p class="none-text" v-if="!songList.items.length">没有听歌排行数据</p>
+          <div>
+            <song-list :songList="songList.items" :thead="songList.thead" :showLoading="showLoading"></song-list>
+          </div>
+        </div>
       </div>
     </div>
   </div>

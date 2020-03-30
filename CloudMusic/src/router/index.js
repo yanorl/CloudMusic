@@ -74,6 +74,18 @@ const video = (resolve) => {
   })
 }
 
+const search = (resolve) => {
+  import('components/search-view/search-view').then((module) => {
+    resolve(module)
+  })
+}
+
+const searchSingle = (resolve) => {
+  import('components/search-view/search-single/search-single').then((module) => {
+    resolve(module)
+  })
+}
+
 const test = (resolve) => {
   import('components/test').then((module) => {
     resolve(module)
@@ -124,6 +136,18 @@ export default new Router({
           path: '/album/:id',
           name: 'album',
           component: album
+        },
+        {
+          path: '/search/:name',
+          name: 'search',
+          component: search,
+          children: [
+            {
+              path: '/searchSingle/:name',
+              name: 'searchSingle',
+              component: searchSingle
+            }
+          ]
         }
       ]
     },
