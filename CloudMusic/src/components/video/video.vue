@@ -168,11 +168,10 @@ export default {
   @import "~common/stylus/variable"
   .mv-view-box
     width: 100%
-    height: calc(100% - 76px)
+    height: 100%
     background: #1b1a1a
     position: fixed
     top: 76px
-    z-index: 999
     .mv-wrap
       height: 100%
       overflow: hidden

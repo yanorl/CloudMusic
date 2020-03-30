@@ -3,7 +3,7 @@
     <label>
       <div class="search-wrap">
         <i class="fa fa-search" aria-hidden="true"></i>
-        <input type="text" class="search" v-model="query" :placeholder="placeholder">
+        <input type="text" class="search" v-model="query" :placeholder="placeholder"  @keyup.enter="submit">
         <span class="clear">
           <i class="fa fa-times-circle" aria-hidden="true" @click="clear" v-show="query"></i>
         </span>
@@ -37,6 +37,9 @@ export default {
   methods: {
     clear () {
       this.query = ''
+    },
+    submit () {
+      this.$emit('performSearch', this.query)
     }
   }
 }

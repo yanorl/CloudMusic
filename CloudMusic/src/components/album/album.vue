@@ -123,7 +123,6 @@ export default {
     _album () {
       album({id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
-          console.log(res)
           this.infoData = res.album
           this.songList = this._normalizeSongList(res.songs)
           // console.log(this.songList)

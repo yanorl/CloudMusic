@@ -9,7 +9,7 @@
             <span>歌手</span>
           </div>
           <ul>
-            <li v-for="item in searchResult.artists" :key="item.id" @click="selectItem(item)">
+            <li v-for="item in searchResult.artists" :key="item.id" @click="selectItem('/artist/', item.id)">
               <span v-html='changeColor(item.name)'></span>
             </li>
           </ul>
@@ -21,7 +21,7 @@
             <span>单曲</span>
           </div>
           <ul>
-            <li v-for="item in searchResult.songs" :key="item.id" @click="selectItem(item)">
+            <li v-for="item in searchResult.songs" :key="item.id" @click="clickSong(item.id)">
               <span v-html='changeColor(item.name)'>
               </span>
               <b v-if="item.alias[0]">({{item.alias[0]}})</b>
@@ -37,7 +37,7 @@
             <span>专辑</span>
           </div>
           <ul>
-            <li v-for="item in searchResult.albums" :key="item.id" @click="selectItem(item)">
+            <li v-for="item in searchResult.albums" :key="item.id" @click="selectItem('/album/', item.id)">
               <span v-html='changeColor(item.name)'></span>
               <i>-</i>
               <span v-html='changeColor(item.artist.name)'></span>
@@ -51,7 +51,7 @@
             <span>视频</span>
           </div>
           <ul>
-            <li v-for="item in searchResult.mvs" :key="item.id" @click="selectItem(item)">
+            <li v-for="item in searchResult.mvs" :key="item.id" @click="selectItem('/mv/', item.id)">
               <span v-html='changeColor(item.name)'></span>
               <i>-</i>
               <span v-html='changeColor(item.artistName)'></span>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { searchSuggest } from 'api'
+import { searchSuggest, songDetail } from 'api'
 import { ERR_OK } from 'api/config'
 import NoResult from 'base/no-result/no-result'
 import Loading from 'base/loading/loading'
@@ -85,6 +85,8 @@ export default {
   data () {
     return {
       searchResult: [],
+      songs: {},
+      privileges: '',
       hasMore: false
     }
   },
@@ -102,9 +104,9 @@ export default {
   methods: {
     _searchSuggest () {
       this.hasMore = true
-      this.query = this.query.trim()
-      if (this.query !== '') {
-        searchSuggest({ keywords: this.query }).then((res) => {
+      let querys = this.query.trim()
+      if (querys) {
+        searchSuggest({ keywords: querys }).then((res) => {
           if (res.code === ERR_OK) {
             this.hasMore = false
             this.searchResult = res.result
@@ -112,9 +114,21 @@ export default {
         })
       }
     },
-    selectItem (item) {
+    _songDetail (id) {
+      songDetail({ids: id}).then((res) => {
+        if (res.code === ERR_OK) {
+          this.songs = res.songs[0]
+          this.privileges = res.songs[0].privileges
+          this.$emit('clickSong', this.songs, this.privileges)
+        }
+      })
+    },
+    selectItem (parm, id) {
       this.$emit('select')
-      console.log(2)
+      this.$router.push(parm + id)
+    },
+    clickSong (id) {
+      this._songDetail(id)
     }
   },
   computed: {
@@ -136,7 +150,7 @@ export default {
     position: fixed
     top: 76px
     width: 360px
-    bottom: 0
+    bottom: $player-height
     margin: 20px 0
     .search-result-wrap
       height: 100%

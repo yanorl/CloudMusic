@@ -72,6 +72,18 @@ export function recommendDj (params) {
   return OriginAxios(url, params)
 }
 
+// 搜索type: 搜索类型；默认为 1 即单曲 , 取值意义 : 1: 单曲, 10: 专辑, 100: 歌手, 1000: 歌单, 1002: 用户, 1004: MV, 1006: 歌词, 1009: 电台, 1014: 视频, 1018:综合
+export function search (params) {
+  const url = '/search'
+  return OriginAxios(url, params)
+}
+
+// 音乐是否可用
+export function checkMusic (params) {
+  const url = '/check/music'
+  return OriginAxios(url, params)
+}
+
 // 热门搜索
 export function searchHot (params) {
   const url = '/search/hot'
@@ -357,5 +369,11 @@ export function commentVideo (params) {
 // 收藏的 MV 列表
 export function mvSublist (params) {
   const url = '/mv/sublist'
+  return OriginAxios(url, params)
+}
+
+// 获取歌曲详情
+export function songDetail (params) {
+  const url = '/song/detail'
   return OriginAxios(url, params)
 }

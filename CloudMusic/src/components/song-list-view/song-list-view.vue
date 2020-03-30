@@ -257,6 +257,8 @@ export default {
             cursor: pointer
             span
               font-size: $font-size-small
+            &:hover
+              color: #fff
             &.current
               border-bottom: 1px solid $color-main
               color: $color-main

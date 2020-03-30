@@ -252,6 +252,8 @@ export default {
           // console.log(1)
           // console.log(this.playingUrl)
           this.$refs.audio.play()
+        } else {
+          this.next()
         }
       }, 1000)
     },
