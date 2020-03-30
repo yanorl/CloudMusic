@@ -238,3 +238,35 @@ export const playlistMixin = {
     }
   }
 }
+
+export const searchTagsMixin = {
+  methods: {
+    changeColor (value, link) {
+      // console.log(value)
+      if (Array.isArray(value)) {
+        value = this.forArray(value, link)
+        // console.log(value)
+      }
+      if (this.query && this.query.length > 0) {
+        const result = value.replace(new RegExp(this.query, 'gi'), `<p style="display: inline-block; color: #94d9ff;">${this.titleCase5(this.query)}</p>`)
+        return result
+      } else {
+        return value
+      }
+    },
+    forArray (array, link) {
+      let html = ''
+      let length = Number(array.length - 1)
+      for (let item in array) {
+        html += `<span class="routerLink cursor" data-id="${array[item].id}" data-link="${link}">${array[item].name}</span>`
+        if (length !== Number(item)) {
+          html += '<b> / </b>'
+        }
+      }
+      return html
+    },
+    titleCase5 (str) {
+      return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
+    }
+  }
+}

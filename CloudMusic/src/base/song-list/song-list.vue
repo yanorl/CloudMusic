@@ -60,7 +60,7 @@
 import Scroll from 'base/scroll/Scroll'
 import NoResult from 'base/no-result/no-result'
 import { mapGetters, mapActions } from 'vuex'
-import { likeMixin } from 'common/js/mixin'
+import { likeMixin, searchTagsMixin } from 'common/js/mixin'
 import { durationStamp } from 'common/js/util'
 
 export default {
@@ -87,7 +87,7 @@ export default {
       default: ''
     }
   },
-  mixins: [likeMixin],
+  mixins: [likeMixin, searchTagsMixin],
   data () {
     return {
       likeBoolean: false,
@@ -150,31 +150,6 @@ export default {
           this.alertFlow = false
         }, 1500)
       }
-    },
-    changeColor (value, link) {
-      if (Array.isArray(value)) {
-        value = this.forArray(value, link)
-      }
-      if (this.query && this.query.length > 0) {
-        const result = value.replace(new RegExp(this.query, 'gi'), `<p style="display: inline-block; color: #94d9ff;">${this.titleCase5(this.query)}</p>`)
-        return result
-      } else {
-        return value
-      }
-    },
-    forArray (array, link) {
-      let html = ''
-      let length = Number(array.length - 1)
-      for (let item in array) {
-        html += `<span class="routerLink cursor" data-id="${array[item].id}" data-link="${link}">${array[item].name}</span>`
-        if (length !== Number(item)) {
-          html += '<b> / </b>'
-        }
-      }
-      return html
-    },
-    titleCase5 (str) {
-      return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
     },
     addComment (event) {
       this.routerLink(event.target.dataset.id, event.target.dataset.link)
@@ -258,7 +233,7 @@ export default {
                  white-space: nowrap
                  padding-right: 5px
                  &.name span
-                   display: inline-block
+                   // display: inline-block
                    margin-left: 5px
                  &:first-child
                    padding-left: 34px

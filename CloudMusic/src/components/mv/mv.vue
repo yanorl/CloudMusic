@@ -141,8 +141,8 @@ export default {
         this._mvSub(1)
       }
     },
-    clickName (id) {
-      this.$router.push({name: 'artist', params: {id: id.toString()}})
+    clickName (parm) {
+      this.$router.push(parm)
     },
     clickLike () {
     },

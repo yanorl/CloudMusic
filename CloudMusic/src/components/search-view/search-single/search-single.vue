@@ -1,45 +1,90 @@
 <template>
-  <div class="test-box">
-    sssssss
+  <div class="search-single-box">
+    <div class="search-single-content">
+      <div class="search-list" v-if="songList.datas">
+        <song-list :songList="songList.datas.items" :query="query" :thead="thead" :showLoading="showLoading" :enabled="false" ref="songLists"></song-list>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { userRecord, userSubcount } from 'api'
-import { ERR_OK } from 'api/config'
-import { mapGetters } from 'vuex'
+import SongList from 'base/song-list/song-list'
+import { checkMusic } from 'api'
+import SongListClass from 'common/js/songListClass'
 
 export default {
-  name: 'test',
+  name: 'search-single',
   data () {
     return {
+      songList: {},
+      showLoading: true
+    }
+  },
+  props: {
+    searchData: {
+      type: Object,
+      default: () => {}
+    },
+    query: {
+      type: String,
+      default: ''
     }
   },
   computed: {
-    ...mapGetters([
-      'user'
-    ])
+    thead () {
+      if (this.songList && this.songList.datas) {
+        return this.songList.datas.thead
+      }
+    }
   },
-  created () {
-    this._userRecord()
-    this._userSubcount()
+  watch: {
+    searchData (newValue, oldValue) {
+      if (newValue) {
+        this.songList = this._normalizeSongList(newValue.songs)
+        this.$emit('songCount', newValue.songCount)
+      }
+    }
   },
   components: {
+    SongList
   },
   methods: {
-    _userRecord () {
-      userRecord({uid: this.user[0].profile.userId, type: 0}).then((res) => {
-        if (res.code === ERR_OK) {
-          // console.log(res)
+    _normalizeSongList (list) {
+      if (list && list.length) {
+        let that = this
+        let map = {
+          datas: {
+            thead: true, // thead: false 表示不需要表头 true表示需要表头
+            items: []
+          }
         }
-      })
+        list.forEach(async (item, index) => {
+          let itemSt
+          try {
+            await that._checkMusic(item.id)
+            itemSt = 0
+          } catch (e) {
+            itemSt = 1
+          }
+          map.datas.items.push(new SongListClass({
+            id: item.id,
+            mvId: item.mvid,
+            name: item.name,
+            // alia: item.alias,
+            author: item.artists,
+            album: [item.album],
+            duration: item.duration,
+            image: item.album.artist.img1v1Url,
+            st: itemSt,
+            source: { name: '搜索页', router: '/search/' + that.$route.params.name }
+          }))
+        })
+        return map
+      }
     },
-    _userSubcount () {
-      userSubcount({timestamp: (new Date()).valueOf()}).then((res) => {
-        if (res.code === ERR_OK) {
-          console.log(res)
-        }
-      })
+    _checkMusic (id) {
+      return Promise.resolve(checkMusic({id, timestamp: (new Date()).valueOf()}))
     }
   }
 }

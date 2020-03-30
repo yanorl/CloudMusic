@@ -97,7 +97,7 @@ export default {
     display: flex
     justify-content: center
     align-items: center
-    margin: 25px 0
+    padding: 25px 0
     .pagination-list-box
       li
         float: left
