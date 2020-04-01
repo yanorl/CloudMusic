@@ -3,7 +3,7 @@
     <div class="banner-wrap">
       <swiper :options="swiperOption" v-if="BannerList.length > 0">
         <swiper-slide v-for="(item, index) of BannerList" :key="index">
-          <img :src="item.pic">
+          <img v-lazy="item.pic">
           <div class="title" :class="item.titleColor" v-if="item.typeTitle">
             {{item.typeTitle}}
           </div>
@@ -90,6 +90,7 @@ export default {
       width: 520px
       img
         width: 520px
+        height: 202px
         border-radius: 15px
       .title
         position: absolute

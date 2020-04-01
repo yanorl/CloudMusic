@@ -2,7 +2,7 @@
   <div class="artist-info-box" v-if="songlistViewArray">
     <div class="artist-info">
       <div class="artist-img">
-        <img :src="songlistViewArray.img1v1Url" width="100%">
+        <img v-lazy="songlistViewArray.img1v1Url" width="100%">
       </div>
       <div class="artist-details">
         <div class="title">
@@ -18,7 +18,7 @@
               <span>
                 <template v-if="songlistViewArray.followed">已</template>收藏</span>
             </li>
-            <li @click="itemClick(songlistViewArray.accountId)">
+            <li v-if="songlistViewArray.accountId" @click="itemClick(songlistViewArray.accountId)">
               <i class="fa fa-user-o" aria-hidden="true"></i>
               <span>个人主页</span>
             </li>
@@ -65,6 +65,7 @@ export default {
   },
   methods: {
     itemClick (id) {
+      // console.log(this.songlistViewArray)
       this.$router.push({name: 'user', params: {userId: id}})
     },
     clickFavorite () {

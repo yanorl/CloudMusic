@@ -48,10 +48,7 @@
       </div>
     </form>
     <div class="avatar-img">
-      <img :src="avatarUrl" alt="" width="100%">
-    </div>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
+      <img v-lazy="avatarUrl" alt="" width="100%">
     </div>
     <confirm ref="confirmDom" text='修改的信息尚未保存，是否保存离开' cancelBtnText="取消" confirmBtnText="保存" @confirm="saveForm"></confirm>
   </div>
@@ -59,7 +56,6 @@
 
 <script>
 import Loading from 'base/loading/loading'
-import Alert from 'base/alert/alert'
 import Confirm from 'base/confirm/confirm'
 import VDistpicker from 'v-distpicker'
 import { userDetail, userUpdate } from 'api'
@@ -90,12 +86,7 @@ export default {
       },
       avatarUrl: '',
       disabledButton: true,
-      loading: false,
-      alertFlow: false,
-      alert: {
-        icon: 'fa-check-circle',
-        text: '修改个人资料成功！'
-      }
+      loading: false
     }
   },
   mixins: [inquireDistrictMixin],
@@ -126,7 +117,6 @@ export default {
   components: {
     VDistpicker,
     Loading,
-    Alert,
     Confirm
   },
   methods: {
@@ -173,11 +163,7 @@ export default {
       userUpdate({nickname: this.formArray.nickname, signature: this.formArray.signature, gender: this.formArray.gender, birthday: this.formArray.birthday, province: this.formArray.province, city: this.formArray.city}).then((res) => {
         if (res.code === ERR_OK) {
           this.loading = false
-          this.alertFlow = true
-          this.disabledButton = true
-          setTimeout(() => {
-            this.alertFlow = false
-          }, 1500)
+          this.$toast('修改个人资料成功！')
         }
       })
     },

@@ -25,19 +25,18 @@
             </li>
           </ul>
         </div>
-        <song-list v-if="current === 0" :songList="filteredSongList" :query="query" :thead="thead" :showLoading="showLoading" :enabled="false" ref="songLists"></song-list>
-        <div ref="Review">
-          <review v-if="current === 1" @scrollTop="scrollToElement"></review>
+        <div class="tab-content">
+          <song-list v-if="current === 0" :songList="filteredSongList" :query="query" :thead="thead" :enabled="false" ref="songLists"></song-list>
+          <div ref="Review">
+            <review v-if="current === 1" @scrollTop="scrollToElement"></review>
+          </div>
+          <subscribers-list v-if="current === 2" :subscribedCount="songlistViewArray.subscribedCount" @scrollTop="scrollTop"></subscribers-list>
         </div>
-        <subscribers-list v-if="current === 2" :subscribedCount="songlistViewArray.subscribedCount" @scrollTop="scrollTop"></subscribers-list>
       </div>
     </scroll>
     <category-label ref="CategoryLabel" @updateSongList="updateSongList"></category-label>
     <confirm ref="confirmPlay" text="'播放全部'将会替换当前的播放列表，是否继续" cancelBtnText="取消" confimBtnText="继续" @confirm="confirmClick"></confirm>
     <confirm ref="confirmFavorite" text="确定不再收藏该歌单" cancelBtnText="取消" confimBtnText="确定" @confirm="cancelSubscribed"></confirm>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
-    </div>
   </div>
 </template>
 
@@ -52,7 +51,6 @@ import SubscribersList from 'base/subscribers-list/subscribers-list'
 import SongListViewInfo from 'components/song-list-view/song-list-view-info/song-list-view-info'
 import SongList from 'base/song-list/song-list'
 import Confirm from 'base/confirm/confirm'
-import Alert from 'base/alert/alert'
 import categoryLabel from 'base/category-label/category-label'
 import SongListClass from 'common/js/songListClass'
 import { mapActions, mapGetters } from 'vuex'
@@ -64,7 +62,6 @@ export default {
       songlistViewArray: {},
       creator: {},
       songList: {},
-      showLoading: true,
       query: '',
       thead: '',
       current: 0,
@@ -72,12 +69,7 @@ export default {
         {name: '歌曲列表', total: false},
         {name: '评论', total: true},
         {name: '收藏', total: false}
-      ],
-      alertFlow: false,
-      alert: {
-        icon: 'fa-check-circle',
-        text: '收藏成功！'
-      }
+      ]
     }
   },
   computed: {
@@ -122,7 +114,6 @@ export default {
     SongListViewInfo,
     SubscribersList,
     Confirm,
-    Alert,
     categoryLabel
   },
   methods: {
@@ -133,35 +124,27 @@ export default {
       this.$refs.confirmFavorite.show()
     },
     _playlistSubscribe (t) {
-      let that = this
       playlistSubscribe({t, id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           if (t === 1) {
-            that.alert.text = '收藏成功！'
+            this.$toast('收藏成功！')
           } else if (t === 2) {
-            that.alert.text = '歌单取消收藏成功!'
+            this.$toast('歌单取消收藏成功')
           }
-          that.alertFlow = true
-          setTimeout(() => {
-            that.alertFlow = false
-            that._songlistView()
-          }, 1500)
         }
       })
     },
     _songlistView () {
+      this.$isLoading(true)
       songlistView({id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           this.songlistViewArray = res.playlist
           this.creator = res.playlist.creator
           this.songList = this._normalizeSongList(res.playlist.tracks, res.privileges)
-          // console.log(this.songList)
-          if (this.$refs.songLists) {
-            this.$refs.songLists.disable()
-          }
           if (this.songList.datas) {
             this.thead = this.songList.datas.thead
           }
+          this.$isLoading(false)
         }
       })
     },

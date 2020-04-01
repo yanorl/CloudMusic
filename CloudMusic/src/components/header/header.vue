@@ -79,7 +79,7 @@ export default {
   @import "~common/stylus/variable"
   .header-box
     position: relative
-    z-index: 2
+    // z-index: 2
     .header-aside
       float: left
       width: $aisde-width

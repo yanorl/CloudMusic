@@ -64,15 +64,11 @@
       </p>
     </div>
     <add-playlist :tracks="tracks" ref="addPlaylists" @success="addFlows"></add-playlist>
-    <div class="alert-container" v-show="AddFlow">
-      <alert text="已收藏到歌单"></alert>
-    </div>
   </div>
 </template>
 
 <script>
 import AddPlaylist from 'base/add-playlist/add-playlist'
-import Alert from 'base/alert/alert'
 import Scroll from 'base/scroll/Scroll'
 import { durationStamp } from 'common/js/util'
 
@@ -102,7 +98,6 @@ export default {
   },
   data () {
     return {
-      AddFlow: false
     }
   },
   computed: {
@@ -122,19 +117,14 @@ export default {
   },
   components: {
     Scroll,
-    AddPlaylist,
-    Alert
+    AddPlaylist
   },
   methods: {
     addPlaylist () {
       this.$refs.addPlaylists.showPop()
     },
     addFlows () {
-      let that = this
-      that.addFlow = true
-      setTimeout(() => {
-        that.addFlow = false
-      }, 2000)
+      this.$toast('已收藏到歌单')
     },
     playCurrent (id) {
       if (this.currentSong.id === id) {

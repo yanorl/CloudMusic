@@ -33,7 +33,7 @@
           </div>
           <div class="tab-item clearfix" v-for="(list, i) in hotAlbums" :key="i">
             <div class="tab-img left" @click="ClickAlbum(list.id)">
-              <img :src="list.picUrl" width="100%">
+              <img v-lazy="list.picUrl" width="100%">
               <p>{{normalDate(list.publishTime)}}</p>
             </div>
             <div class="tab-content-list letf">
@@ -61,9 +61,6 @@
     </scroll>
     <confirm ref="confirmPlay" text="'播放全部'将会替换当前的播放列表，是否继续" cancelBtnText="取消" confimBtnText="继续" @confirm="confirmClick"></confirm>
     <confirm ref="confirmFavorite" text="确定不再收藏该歌单" cancelBtnText="取消" confimBtnText="确定" @confirm="cancelSubscribed"></confirm>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
-    </div>
   </div>
 </template>
 
@@ -79,7 +76,6 @@ import artistSimilar from 'components/artist/artist-similar/artist-similar'
 import artistMv from 'components/artist/artist-mv/artist-mv'
 import SongList from 'base/song-list/song-list'
 import Confirm from 'base/confirm/confirm'
-import Alert from 'base/alert/alert'
 import SongListClass from 'common/js/songListClass'
 import { mapActions } from 'vuex'
 import { timeStamp } from 'common/js/util'
@@ -99,16 +95,11 @@ export default {
         {name: '歌手详情', total: false},
         {name: '相似歌手', total: false}
       ],
-      alertFlow: false,
       hotFlow: true,
-      alert: {
-        icon: 'fa-check-circle',
-        text: '收藏成功！'
-      },
       pullup: true,
       beforeScroll: true,
       hasMore: true,
-      page: 0,
+      page: 1,
       limit: 20
     }
   },
@@ -121,15 +112,14 @@ export default {
   },
   watch: {
     $route: function (newRouter, oldRouter) {
-      this._artists()
       this.current = 0
       this.hotAlbums = []
       this.scrollTop()
+      this.updata()
     }
   },
   created () {
-    this._artists()
-    this._artistAlbum()
+    this.updata()
   },
   components: {
     Scroll,
@@ -140,27 +130,29 @@ export default {
     artistDes,
     artistSimilar,
     artistMv,
-    Confirm,
-    Alert
+    Confirm
   },
   methods: {
+    updata () {
+      this.$isLoading(true)
+      Promise.all([this._artists(), this._artistAlbum()]).then((result) => {
+        this.$isLoading(false)
+      }).catch((error) => {
+        this.$isLoading(false)
+        console.log(error)
+      })
+    },
     showConfirmFavorite () {
       this.$refs.confirmFavorite.show()
     },
     _artistSub (t) {
-      let that = this
       artistSub({t, id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           if (t === 1) {
-            that.alert.text = '收藏成功！'
+            this.$toast('收藏成功！')
           } else if (t === 2) {
-            that.alert.text = '歌手取消收藏成功!'
+            this.$toast('歌单取消收藏成功')
           }
-          that.alertFlow = true
-          setTimeout(() => {
-            that.alertFlow = false
-            that._artists()
-          }, 1500)
         }
       })
     },
@@ -171,9 +163,6 @@ export default {
           this.songlistViewArray = res.artist
           this.songList = this._normalizeSongList(res.hotSongs)
           // console.log(this.songList)
-          if (this.$refs.songLists) {
-            this.$refs.songLists.disable()
-          }
         }
       })
     },

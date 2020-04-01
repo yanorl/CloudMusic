@@ -4,7 +4,7 @@
       <div class="subscribers-list-content" v-if="subscribers.length > 0">
         <div class="subscribers-list-item" v-for="(item, index) in subscribers" :key="index">
           <div class="avatar-img cursor" @click="itemClick(item.userId)">
-            <img :src="item.avatarUrl" alt="" width="100%">
+            <img v-lazy="item.avatarUrl" alt="" width="100%">
           </div>
           <div class="subscribers-info">
             <div class="user-info">
@@ -22,7 +22,7 @@
       <div class="pagination-box" v-if="subscribers.length > 0">
         <pagination :totalCount="subscribedCount" :limit="limit" :currentPage="currentPage" @turn="getData"></pagination>
       </div>
-      <p class="none-text" v-if="!subscribers.length">{{noneText}}</p>
+      <p class="none-text" v-if="!subscribedCount">{{noneText}}</p>
     </div>
   </div>
 </template>

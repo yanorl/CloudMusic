@@ -15,9 +15,6 @@
         </div>
       </scroll>
     </div>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
-    </div>
   </div>
 </template>
 
@@ -26,7 +23,6 @@ import Scroll from 'base/scroll/Scroll'
 import Review from 'components/mv/review/review'
 import MvInfo from 'components/mv/mv-info/mv-info'
 import MvAside from 'components/mv/mv-aside/mv-aside'
-import Alert from 'base/alert/alert'
 import { mvDetail, mvUrl, simiMv, relatedAllvideo, mvSub } from 'api'
 import { ERR_OK } from 'api/config'
 import VideoClass from 'common/js/videoClass'
@@ -40,11 +36,6 @@ export default {
       relatedVideo: [],
       subed: '',
       url: '',
-      alertFlow: false,
-      alert: {
-        icon: 'fa-check-circle',
-        text: '视频收藏成功！'
-      },
       title: 'MV详情'
     }
   },
@@ -62,14 +53,25 @@ export default {
     Scroll,
     Review,
     MvInfo,
-    MvAside,
-    Alert
+    MvAside
   },
   methods: {
     _all () {
-      this._mvDetail()
-      this._simiMv()
-      this._relatedAllvideo()
+      this.$isLoading(true)
+      Promise.all([this._simiMv(), this._relatedAllvideo(), this._mvUrl(), this._mvDetail()]).then((result) => {
+        this.$isLoading(false)
+      }).catch((error) => {
+        this.$isLoading(false)
+        console.log(error)
+      })
+    },
+    _mvUrl () {
+      mvUrl({id: this.$route.params.mvid, timestamp: (new Date()).valueOf()}).then((res) => {
+        if (res.code === ERR_OK) {
+          this.url = res.data.url
+          // console.log(res)
+        }
+      })
     },
     _mvDetail () {
       mvDetail({mvid: this.$route.params.mvid, timestamp: (new Date()).valueOf()}).then((res) => {
@@ -77,12 +79,6 @@ export default {
           this.details = this._normalize(res.data)
           // console.log(this.details)
           this.subed = res.subed
-        }
-      })
-      mvUrl({id: this.$route.params.mvid, timestamp: (new Date()).valueOf()}).then((res) => {
-        if (res.code === ERR_OK) {
-          this.url = res.data.url
-          // console.log(res)
         }
       })
     },
@@ -118,19 +114,13 @@ export default {
       })
     },
     _mvSub (t) {
-      let that = this
       mvSub({t, mvid: this.$route.params.mvid, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           if (t === 1) {
-            that.alert.text = '视频收藏成功！'
+            this.$toast('视频收藏成功！')
           } else if (t === 2) {
-            that.alert.text = '视频取消收藏成功!'
+            this.$toast('视频取消收藏成功')
           }
-          that.alertFlow = true
-          setTimeout(() => {
-            that.alertFlow = false
-            that._mvDetail()
-          }, 1500)
         }
       })
     },

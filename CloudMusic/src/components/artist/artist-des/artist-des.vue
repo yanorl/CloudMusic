@@ -42,12 +42,14 @@ export default {
   },
   methods: {
     _artistDesc () {
+      this.$isLoading(true)
       artistDesc({id: this.artistId, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           // console.log(res)
           this.des = res.introduction
           this.briefDesc = res.briefDesc
         }
+        this.$isLoading(false)
       })
     }
   }
