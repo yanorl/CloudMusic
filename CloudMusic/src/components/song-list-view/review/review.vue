@@ -13,7 +13,8 @@ export default {
   name: 'review',
   data () {
     return {
-      totalCount: '',
+      loading: false,
+      totalCount: 0,
       comments: [],
       hotComments: []
     }
@@ -29,12 +30,14 @@ export default {
       this._commentReview(data)
     },
     _commentReview (commonParams = {}) {
+      this.$isLoading(true)
       const data = Object.assign({}, commonParams, {id: this.$route.params.id, limit: this.limit, timestamp: (new Date()).valueOf()})
       commentPlayList(data).then((res) => {
         if (res.code === ERR_OK) {
-          this.totalCount = res.total.toString()
+          this.totalCount = res.total
           this.comments = res.comments
           this.hotComments = res.hotComments
+          this.$isLoading(false)
         }
       })
     },

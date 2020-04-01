@@ -5,7 +5,7 @@
         <ul>
           <li v-for="(item, index) in searchData.videos" :key="index" class="inline-block">
             <div class="img-box" @click="clickItem(item.type, item.vid)">
-              <img :src="item.coverUrl" width="100%">
+              <img v-lazy="item.coverUrl" width="100%">
               <span class="number">
                 <i class="fa fa-caret-right" aria-hidden="true"></i>
                 <p>{{item.playTime | toNumber}}</p>

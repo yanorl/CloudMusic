@@ -7,7 +7,7 @@
       <ul class="clearfix">
         <li v-for="(item, index) in mvs" :key="index">
           <div class="img-box left" @click="clickMvs(item.id)">
-            <img :src="item.cover" width="100%">
+            <img v-lazy="item.cover" width="100%">
             <span class="number">
               <i class="fa fa-caret-right" aria-hidden="true"></i>
               <p>{{item.playCount | toNumber}}</p>
@@ -30,7 +30,7 @@
       <ul class="clearfix">
         <li v-for="(item, index) in relatedVideo" :key="index">
           <div class="img-box left" @click="clickVideo(item.vid, item.type)">
-            <img :src="item.coverUrl" width="100%">
+            <img v-lazy="item.coverUrl" width="100%">
             <span class="number">
               <i class="fa fa-caret-right" aria-hidden="true"></i>
               <p>{{item.playTime | toNumber}}</p>
@@ -114,6 +114,9 @@ export default {
           font-size: $font-size-small
           .img-box
             width: 110px
+            img
+              width: 110px
+              height: 82px
           .des
             width: 170px
             span.tags
@@ -126,6 +129,8 @@ export default {
         overflow: hidden
         display: flex
         align-items: center
+        .des
+          width: 150px
         .img-box
           width: 150px
           border-radius: 5px
@@ -134,6 +139,10 @@ export default {
           position: relative
           color: #fff
           margin-right: 10px
+          img
+            width: 150px
+            height: 84px
+            display: block
           .duration
             position: absolute
             right: 10px

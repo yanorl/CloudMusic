@@ -8,7 +8,7 @@
               <span class="song-medium-screen">
                 <i :class="medium" aria-hidden="true"></i>
               </span>
-              <img :src="currentSong.image" width="100%">
+              <img v-lazy="currentSong.image" width="100%">
             </div>
             <div class="song-detail">
               <div class="song-des ellipsis">
@@ -69,9 +69,6 @@
       </div>
       <progress-bar :percent="percent" @percentChange="onProgressBarChange" v-if="playlist.length > 0"></progress-bar>
     </div>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
-    </div>
     <audio ref="audio" :src="playingUrl" @timeupdate="updateTime" @play="ready" @error="error" @ended='end'></audio>
     <medium-screen ref="refMediumScreen" :MScreen="MScreen" :currentLyric="currentLyric" :currentLineNum="currentLineNum" @changeMScreen="onChangeMScreen"></medium-screen>
   </div>
@@ -82,7 +79,6 @@ import { mapGetters, mapMutations, mapActions } from 'vuex'
 import { durationStamp, shuffle } from 'common/js/util'
 import { likeMixin } from 'common/js/mixin'
 import { playMode } from 'common/js/config'
-import Alert from 'base/alert/alert'
 import ProgressBar from 'base/progress-bar/progress-bar'
 import SoundBar from 'base/sound-bar/sound-bar'
 import PlayListBox from 'base/play-list/play-list'
@@ -164,7 +160,6 @@ export default {
   created () {
   },
   components: {
-    Alert,
     ProgressBar,
     SoundBar,
     PlayListBox,

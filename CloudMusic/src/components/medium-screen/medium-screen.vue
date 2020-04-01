@@ -8,7 +8,7 @@
               <div class="cd-wrapper" :class="playClass">
                 <div class="arm"></div>
                 <div class="cd">
-                  <img width="100%" height="100%" :src="currentSong.image">
+                  <img width="100%" height="100%" v-lazy="currentSong.image">
                 </div>
               </div>
               <div class="icon-box">
@@ -118,9 +118,6 @@
         </div>
       </scroll>
       <add-playlist :tracks="[currentSong.id]" ref="addPlaylists" @success="addFlows"></add-playlist>
-      <div class="alert-container" v-show="AddFlow">
-        <alert text="已收藏到歌单"></alert>
-      </div>
     </div>
   </transition>
 </template>
@@ -128,7 +125,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import Scroll from 'base/scroll/Scroll'
-import Alert from 'base/alert/alert'
 import Review from 'components//medium-screen/review/review'
 import AddPlaylist from 'base/add-playlist/add-playlist'
 import { likeMixin } from 'common/js/mixin'
@@ -189,7 +185,6 @@ export default {
   },
   components: {
     Scroll,
-    Alert,
     Review,
     AddPlaylist
   },
@@ -277,11 +272,7 @@ export default {
       this.$refs.scroll.scrollTo(0, 0)
     },
     addFlows () {
-      let that = this
-      that.addFlow = true
-      setTimeout(() => {
-        that.addFlow = false
-      }, 2000)
+      this.$toast('已收藏到歌单')
     }
   }
 }

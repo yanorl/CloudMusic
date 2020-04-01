@@ -4,7 +4,7 @@
       <ul class="clearfix">
         <li v-for="(item, index) in artists" :key="index" @click="clickItem(item.id)">
           <div class="img-box">
-            <img :src="item.img1v1Url" width="100%">
+            <img v-lazy="item.img1v1Url" width="100%">
           </div>
           <p>{{item.name}}</p>
         </li>
@@ -39,11 +39,13 @@ export default {
   },
   methods: {
     _simiArtist () {
+      this.$isLoading(true)
       simiArtist({id: this.artistId, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           // console.log(res)
           this.artists = res.artists
         }
+        this.$isLoading(false)
       })
     },
     clickItem (id) {

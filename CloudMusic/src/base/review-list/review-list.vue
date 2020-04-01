@@ -6,7 +6,7 @@
         <li v-for="(item, index) in commentsData" :key="index">
           <div class="review-list-item">
             <div class="avatar-box cursor" @click="itemClick(item.user.userId)">
-              <img :src="item.user.avatarUrl" alt="" width="100%">
+              <img v-lazy="item.user.avatarUrl" alt="" width="100%">
             </div>
             <div class="review-list-item-content">
               <div class="review-list-item-avatar" v-if="item.user">

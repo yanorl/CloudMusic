@@ -2,17 +2,11 @@ import { mapGetters, mapMutations } from 'vuex'
 import { likeList, likeSong, commentControl, playlist } from 'api'
 import { ERR_OK } from 'api/config'
 import Axios from 'axios'
-import Alert from 'base/alert/alert'
 
 export const likeMixin = {
   data () {
     return {
-      likeList: [],
-      alertFlow: false,
-      alert: {
-        icon: 'fa-check-circle',
-        text: '已添加到我喜欢的音乐！'
-      }
+      likeList: []
     }
   },
   created () {
@@ -32,7 +26,6 @@ export const likeMixin = {
     }
   },
   components: {
-    Alert
   },
   methods: {
     _likeList () {
@@ -51,14 +44,10 @@ export const likeMixin = {
           e.target.className = Boolean ? 'fa color-main fa-heart' : 'fa fa-heart-o'
           this.setWatchLike(!this.watchLike)
           if (!Boolean) {
-            this.alert.text = '取消喜欢成功!'
+            this.$toast('取消喜欢成功!')
           } else {
-            this.alert.text = '已添加到我喜欢的音乐！'
+            this.$toast('已添加到我喜欢的音乐！')
           }
-          this.alertFlow = true
-          setTimeout(() => {
-            this.alertFlow = false
-          }, 1500)
         }
       }).catch(function (error) {
         console.log(error.msg)
@@ -73,12 +62,7 @@ export const likeMixin = {
         let Boolean = !this.likeList.includes(likeId)
         this._likeSong(likeId, Boolean, e)
       } else {
-        this.alertFlow = true
-        this.alert.icon = 'fa-times-circle'
-        this.alert.text = '因合作方要求，该资源暂时下架>_<'
-        setTimeout(() => {
-          this.alertFlow = false
-        }, 1500)
+        this.$toast('因合作方要求，该资源暂时下架>_<')
       }
     },
     ...mapMutations({
@@ -144,11 +128,6 @@ export const reviewMixin = {
       limit: 30,
       currentPage: 1,
       noneText: '还没有评论，快来抢沙发~',
-      alert: {
-        icon: 'fa-check-circle',
-        text: '写点东西吧，内容不能为空哦！'
-      },
-      alertFlow: false,
       commentId: ''
     }
   },
@@ -161,20 +140,8 @@ export const reviewMixin = {
             this.$emit('openMediumScroll')
           }
           this.$refs.reviewForm.reviewContentEmpty()
-          this.alert = {
-            icon: 'fa-check-circle',
-            text: '评论发表成功！'
-          }
-          this.alertFlow = true
-          setTimeout(() => {
-            this.alertFlow = false
-            this.alert = {
-              icon: 'fa-times-circle',
-              text: '写点东西吧，内容不能为空哦！'
-            }
-            this.$refs.reviewForm.textareaFocus()
-          }, 1500)
-          // this._commentReview()
+          this.$toast('评论发表成功！')
+          this.$refs.reviewForm.textareaFocus()
           this.updateReview()
         }
       })
@@ -186,10 +153,7 @@ export const reviewMixin = {
     },
     tips () {
       this.$refs.reviewForm.textareaFocus()
-      this.alertFlow = true
-      setTimeout(() => {
-        this.alertFlow = false
-      }, 1500)
+      this.$toast('写点东西吧，内容不能为空哦！')
     },
     rpName (name, id) {
       this.rp = `回复${name}: `

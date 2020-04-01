@@ -2,7 +2,7 @@
   <div class="song-list-view-info-box" v-if="songlistViewArray">
     <div class="song-list-view-info">
       <div class="song-list-view-img">
-        <img :src="songlistViewArray.coverImgUrl" width="100%">
+        <img v-lazy="songlistViewArray.coverImgUrl" width="100%">
       </div>
       <div class="song-list-view-details">
         <div class="title">
@@ -14,7 +14,7 @@
         </div>
         <div class="song-list-view-creator">
           <div class="avatar-img cursor" @click="itemClick(creator.userId)">
-            <img :src="creator.avatarUrl" width="100%">
+            <img v-lazy="creator.avatarUrl" width="100%">
           </div>
           <span class="creator-name cursor" @click="itemClick(creator.userId)">{{creator.nickname}}</span>
           <span class="create-time">{{normalDate(songlistViewArray.createTime)}} 创建</span>

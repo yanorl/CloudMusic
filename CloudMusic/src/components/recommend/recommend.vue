@@ -41,11 +41,18 @@ export default {
     }
   },
   created () {
-    this._personalized()
-    this._privatecontent()
-    this._newsong()
-    this._recommendMv()
-    this._recommendDj()
+    this.$isLoading(true)
+    Promise.all([this._personalized(), this._privatecontent(), this._newsong(), this._recommendMv(), this._recommendDj()]).then((result) => {
+      this.$isLoading(false)
+    }).catch((error) => {
+      this.$isLoading(false)
+      console.log(error)
+    })
+    // this._personalized()
+    // this._privatecontent()
+    // this._newsong()
+    // this._recommendMv()
+    // this._recommendDj()
   },
   components: {
     Banner,
@@ -108,6 +115,7 @@ export default {
     z-index: 1
     .recommend-wrap
       height: 100%
+      overflow: hidden
       .recommend-content
         margin-top: 15px
         padding-bottom: 80px

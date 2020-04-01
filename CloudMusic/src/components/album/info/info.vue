@@ -2,7 +2,7 @@
   <div class="info-box" v-if="infoData">
     <div class="view-info">
       <div class="view-img">
-        <img :src="infoData.picUrl" width="100%">
+        <img v-lazy="infoData.picUrl" width="100%">
       </div>
       <div class="view-details">
         <div class="title">

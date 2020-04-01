@@ -5,7 +5,7 @@
       <ul class="clearfix">
         <li v-for="(item, index) in artists" :key="index" @click="clickItem(item.id)">
           <div class="img-box">
-            <img :src="item.imgurl" width="100%">
+            <img v-lazy="item.imgurl" width="100%">
             <span class="number">
                 <i class="fa fa-caret-right" aria-hidden="true"></i>
                 <p>{{item.playCount | toNumber}}</p>
@@ -22,7 +22,7 @@
       <pagination :totalCount="totalCount" :limit="limit" :currentPage="currentPage" @turn="getData"></pagination>
     </div>
     </div>
-    <div v-if="!artists.length">
+    <div v-if="!totalCount">
       <p>没有相关MV</p>
     </div>
   </div>
@@ -63,12 +63,14 @@ export default {
   },
   methods: {
     _artistMv (commonParams = {}) {
+      this.$isLoading(true)
       const data = Object.assign({}, commonParams, {id: this.artistId, limit: this.limit, timestamp: (new Date()).valueOf()})
       artistMv(data).then((res) => {
         if (res.code === ERR_OK) {
           // console.log(res)
           this.artists = res.mvs
         }
+        this.$isLoading(false)
       })
     },
     clickItem (id) {
@@ -95,13 +97,15 @@ export default {
         float: left
         padding: 0 15px 15px 0
         box-sizing: border-box
-        min-height: 226px
+        height: 226px
         .img-box
           border-radius: 10px
           overflow: hidden
           cursor: pointer
           position: relative
           color: #fff
+          width: 212px
+          height:162px
           .duration
             position: absolute
             right: 10px
