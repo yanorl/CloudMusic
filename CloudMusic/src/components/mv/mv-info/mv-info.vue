@@ -107,6 +107,9 @@ export default {
       i
         margin-right: 10px
     .video-box
+      width: 640px
+      height: 363px
+      background: #000
       border-radius: 10px
       overflow: hidden
       .video-wrap

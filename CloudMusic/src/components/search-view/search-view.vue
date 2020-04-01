@@ -16,10 +16,10 @@
           </ul>
         </div>
       </div>
-      <div class="search-tab-wrap">
+      <div class="search-tab-wrap" v-loading="loading">
         <scroll ref="scroll" :data="[...searchData]" class="search-tab-content">
           <div class="search-list">
-            <div class="search-list-content" v-if="songCount">
+            <div class="search-list-content">
               <div class="tab-item" v-if="current === 0">
                 <search-single :searchData="searchData" @songCount="songCountFn" :query="$route.params.name"></search-single>
               </div>
@@ -38,11 +38,11 @@
                <div class="tab-item" v-if="current === 5">
                 <search-user :searchData="searchData" @songCount="songCountFn" :query="$route.params.name"></search-user>
               </div>
-              <div class="pagination-box">
+              <div class="pagination-box" v-if="songCount">
                 <pagination :totalCount="Number(songCount)" :limit="limit" :currentPage="currentPage" @turn="getData"></pagination>
               </div>
             </div>
-            <p class="none-text" v-if="songCount == 0">很抱歉，未能找到与<span>“{{$route.params.name}}”</span>相关的任何{{tabs[current].name}}！</p>
+            <p class="none-text" v-if="noCount">很抱歉，未能找到与<span>“{{$route.params.name}}”</span>相关的任何{{tabs[current].name}}！</p>
           </div>
         </scroll>
       </div>
@@ -68,8 +68,9 @@ export default {
   data () {
     return {
       songCount: '0',
-      searchData: {
-      },
+      searchData: {},
+      noCount: false,
+      loading: false,
       tabs: [
         {name: '单曲', unit: '首'},
         {name: '歌手', unit: '位'},
@@ -97,10 +98,14 @@ export default {
   },
   watch: {
     $route: function (newRouter, oldRouter) {
+      this.searchData = {}
+      this.current = 0
+      this.songCount = '0'
       this._search(1)
     }
   },
   created () {
+    this.$isLoading(true)
     this._search(1)
     this.$watch('current', debounce((newCurrent) => {
       this._search(this.types[this.current].num)
@@ -123,10 +128,17 @@ export default {
         if (res.code === ERR_OK) {
           // console.log(res)
           this.searchData = res.result
+          this.loading = false
+          this.$isLoading(false)
         }
       })
     },
     songCountFn (num) {
+      if (num === 0) {
+        this.noCount = true
+      } else {
+        this.noCount = false
+      }
       this.songCount = num
     },
     getData (i) {
@@ -141,6 +153,9 @@ export default {
     toggle (index) {
       // console.log(index + '---' + this.current)
       if (this.current !== index) {
+        this.noCount = false
+        this.loading = true
+        // this.$isLoading(true)
         this.searchData = {}
         this.current = index
         this.songCount = '0'

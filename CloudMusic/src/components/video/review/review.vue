@@ -13,7 +13,7 @@ export default {
   name: 'review',
   data () {
     return {
-      totalCount: '',
+      totalCount: 0,
       comments: [],
       hotComments: []
     }
@@ -37,7 +37,7 @@ export default {
       const data = Object.assign({}, commonParams, {id: this.$route.params.id, limit: this.limit, timestamp: (new Date()).valueOf()})
       commentVideo(data).then((res) => {
         if (res.code === ERR_OK) {
-          this.totalCount = res.total.toString()
+          this.totalCount = res.total
           this.comments = res.comments
           this.hotComments = res.hotComments
         }

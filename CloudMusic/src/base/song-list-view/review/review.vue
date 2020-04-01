@@ -19,9 +19,6 @@
         </div>
       </div>
     </div>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
-    </div>
   </div>
 </template>
 
@@ -29,7 +26,6 @@
 import { commentPlayList } from 'api'
 import { ERR_OK } from 'api/config'
 import { reviewMixin } from 'common/js/mixin'
-import Alert from 'base/alert/alert'
 import ReviewForm from 'base/review-form/review-form'
 import ReviewList from 'base/review-list/review-list'
 import Pagination from 'base/pagination/pagination'
@@ -47,7 +43,6 @@ export default {
   components: {
     ReviewForm,
     ReviewList,
-    Alert,
     Pagination
   },
   methods: {
@@ -82,11 +77,6 @@ export default {
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
   .review-box
-    .alert-container
-      width: 500px
-      height: 500px
-      .alert
-        top: 250px
     .review-wrap
       margin:  0 34px
       overflow: hidden

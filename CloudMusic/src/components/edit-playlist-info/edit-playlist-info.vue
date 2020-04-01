@@ -34,10 +34,7 @@
       </div>
     </form>
     <div class="avatar-img">
-      <img :src="songlistViewArray.coverImgUrl" alt="" width="100%">
-    </div>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
+      <img v-lazy="songlistViewArray.coverImgUrl" alt="" width="100%">
     </div>
   <category-label ref="CategoryLabel" @updateSongList="updateSongList" :select="tags"></category-label>
   </div>
@@ -45,7 +42,6 @@
 
 <script>
 import Loading from 'base/loading/loading'
-import Alert from 'base/alert/alert'
 import categoryLabel from 'base/category-label/category-label'
 import { songlistView, playlistUpdate } from 'api'
 import { ERR_OK } from 'api/config'
@@ -65,11 +61,6 @@ export default {
       },
       tags: [],
       infoNumber: 1000,
-      alertFlow: false,
-      alert: {
-        icon: 'fa-check-circle',
-        text: '介绍字数超限'
-      },
       disabledButton: true,
       loading: false
     }
@@ -106,7 +97,6 @@ export default {
   },
   components: {
     Loading,
-    Alert,
     categoryLabel
   },
   methods: {
@@ -173,11 +163,7 @@ export default {
       if (this.infoNumber >= 0) {
         this._playlistUpdate()
       } else {
-        let that = this
-        that.alertFlow = true
-        setTimeout(() => {
-          that.alertFlow = false
-        }, 1500)
+        this.$toast('介绍字数超限')
       }
     },
     closeForm () {

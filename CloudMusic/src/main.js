@@ -10,6 +10,15 @@ import 'common/stylus/index.styl'
 import 'common/js/filters'
 import 'font-awesome/css/font-awesome.min.css'
 import './validate'
+import Loading from './plugin/loading'
+import Toast from './plugin/toast'
+
+import VLoading from './plugin/v-loading/v-loading'
+Vue.use(VLoading)
+console.log(VLoading)
+
+Vue.use(Loading)
+Vue.use(Toast)
 
 Vue.config.productionTip = false
 

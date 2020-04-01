@@ -19,7 +19,7 @@
                 <ul>
                   <li class="item" v-for="(item, index) in createdListres" :key="index" @click="clickItem(item.id)">
                     <div class="img-box">
-                      <img :src="item.coverImgUrl" alt="" width='100%'>
+                      <img v-lazy="item.coverImgUrl" alt="" width='100%'>
                     </div>
                     <div class="content">
                       <div class="name">{{item.name}}</div>
@@ -120,6 +120,7 @@ export default {
           display: flex
           align-items: center
           cursor: pointer
+          text-align: left
           .img-box
             width: 60px
             height: 60px

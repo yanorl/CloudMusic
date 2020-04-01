@@ -8,10 +8,10 @@
             <li @click="clickItem(0)" :class="{'acitve': index === 0 }">所有时间</li>
           </ul>
         </div>
-        <div>
+        <div v-if="songList.items" v-loading="loading">
           <p class="none-text" v-if="!songList.items.length">没有听歌排行数据</p>
           <div>
-            <song-list :songList="songList.items" :thead="songList.thead" :showLoading="showLoading"></song-list>
+            <song-list :songList="songList.items" :thead="songList.thead"></song-list>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@ export default {
       userRecord: {},
       songList: [],
       index: 1,
-      showLoading: true
+      loading: false
     }
   },
   computed: {
@@ -50,17 +50,17 @@ export default {
   },
   methods: {
     _userRecord (types) {
-      this.showLoading = true
+      this.loading = true
       userRecord({uid: this.$route.params.userId, type: types}).then((res) => {
         if (res.code === ERR_OK) {
           if (types === 1) {
-            this.showLoading = false
+            this.loading = false
             this.userRecord = this._normalizeRecord(res.weekData)
             if (this.userRecord.datas) {
               this.songList = this.userRecord.datas
             }
           } else {
-            this.showLoading = false
+            this.loading = false
             this.userRecord = this._normalizeRecord(res.allData)
             if (this.userRecord.datas) {
               this.songList = this.userRecord.datas

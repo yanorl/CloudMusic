@@ -6,7 +6,7 @@
           <li v-for="(item, index) in searchData.albums" :key="index" @click="clickItem(item.id)" class="block">
             <div class="list-left">
               <div class="img-box">
-                <img :src="item.picUrl" width="100%">
+                <img v-lazy="item.picUrl" width="100%">
               </div>
               <div class="name">
                 <span v-html="changeColor(item.name)"></span>

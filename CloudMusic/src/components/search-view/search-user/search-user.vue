@@ -6,7 +6,7 @@
           <li v-for="(item, index) in searchData.userprofiles" :key="index" @click="clickItem(item.userId)" class="block">
             <div class="list-left">
               <div class="img-box">
-                <img :src="item.avatarUrl" width="100%">
+                <img v-lazy="item.avatarUrl" width="100%">
               </div>
               <div class="name">
                 <span v-html="changeColor(item.nickname)"></span>

@@ -4,7 +4,7 @@
       <div class="user-content">
         <div class="user-info">
           <div class="avatar-img">
-            <img :src="userDetail.profile.avatarUrl" alt="" width="100%">
+            <img v-lazy="userDetail.profile.avatarUrl" alt="" width="100%">
           </div>
           <div class="user-info-details">
             <div class="user-ifo-top">
@@ -130,8 +130,13 @@ export default {
   },
   methods: {
     _playlist () {
-      this._createdList()
-      this._subscribersList()
+      this.$isLoading(true)
+      Promise.all([this._createdList(), this._subscribersList()]).then((result) => {
+        this.$isLoading(false)
+      }).catch((error) => {
+        this.$isLoading(false)
+        console.log(error)
+      })
     },
     _userDetail () {
       userDetail({uid: this.$route.params.userId}).then((res) => {

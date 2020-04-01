@@ -15,9 +15,6 @@
         </div>
       </scroll>
     </div>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
-    </div>
   </div>
 </template>
 
@@ -26,7 +23,6 @@ import Scroll from 'base/scroll/Scroll'
 import Review from 'components/video/review/review'
 import MvInfo from 'components/mv/mv-info/mv-info'
 import MvAside from 'components/mv/mv-aside/mv-aside'
-import Alert from 'base/alert/alert'
 import { videoDetail, videoUrl, relatedAllvideo, videoSub, mvSublist } from 'api'
 import { ERR_OK } from 'api/config'
 import VideoClass from 'common/js/videoClass'
@@ -41,11 +37,6 @@ export default {
       relatedVideo: [],
       subed: '',
       url: '',
-      alertFlow: false,
-      alert: {
-        icon: 'fa-check-circle',
-        text: '视频收藏成功！'
-      },
       title: '视频详情'
     }
   },
@@ -63,19 +54,30 @@ export default {
     Scroll,
     Review,
     MvInfo,
-    MvAside,
-    Alert
+    MvAside
   },
   methods: {
     _all () {
-      this._videoDetail()
-      this._relatedAllvideo()
-      this._mvSublist()
+      this.$isLoading(true)
+      Promise.all([this._mvSublist(), this._videoUrl(), this._videoDetail(), this._relatedAllvideo()]).then((result) => {
+        this.$isLoading(false)
+      }).catch((error) => {
+        this.$isLoading(false)
+        console.log(error)
+      })
     },
     _mvSublist () {
       mvSublist({timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           this.subed = res.data.some(({vid}) => vid === this.$route.params.id)
+        }
+      })
+    },
+    _videoUrl () {
+      videoUrl({id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
+        if (res.code === ERR_OK) {
+          // console.log(res)
+          this.url = res.urls[0].url
         }
       })
     },
@@ -85,12 +87,6 @@ export default {
           // console.log(res)
           this.details = this._normalize(res.data)
           // this.subed = res.subed
-        }
-      })
-      videoUrl({id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
-        if (res.code === ERR_OK) {
-          // console.log(res)
-          this.url = res.urls[0].url
         }
       })
     },
@@ -118,20 +114,13 @@ export default {
       })
     },
     _videoSub (t) {
-      let that = this
       videoSub({t, id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           if (t === 1) {
-            that.alert.text = '视频收藏成功！'
+            this.$toast('视频收藏成功！')
           } else if (t === 2) {
-            that.alert.text = '视频取消收藏成功!'
+            this.$toast('视频取消收藏成功!')
           }
-          that.alertFlow = true
-          setTimeout(() => {
-            that.alertFlow = false
-            that._videoDetail()
-            that._mvSublist()
-          }, 1500)
         }
       })
     },

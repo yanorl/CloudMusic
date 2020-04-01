@@ -1,6 +1,6 @@
 <template>
   <div class="song-list-box">
-    <div class="song-list-wrap" :class="{'fixed': enabled}">
+    <div class="song-list-wrap" v-if="songList.length" :class="{'fixed': enabled}">
       <scroll ref="scroll" :data="songList" class="list-box">
         <table class="table-box">
           <thead v-if="thead">
@@ -30,7 +30,7 @@
               <td v-if="item.name" class="name" :class="{'gray': item.st !== 0}" :title="titleDes(item.name, item.alia)">
                 <span v-html="changeColor(item.name, 'name')" :class="{'color-main': playCurrent(item.id)}"></span>
                 <span class="alia gray" v-if="item.alia" v-html="changeColor(item.alia, 'alia')"></span>
-                <span class="iconMv" v-if="item.mvId">
+                <span class="iconMv" v-if="item.mvId" @click="$router.push('/mv/' + item.mvId)">
                   <i class="color-main fa fa-play-circle-o" aria-hidden="true"></i>
                 </span>
               </td>
@@ -47,11 +47,8 @@
     <div class="not-data" v-if="thead && query && songList.length === 0">
       <no-result title="抱歉，暂无搜索结果"></no-result>
     </div>
-    <div class="not-data" v-show="!songList.length && showLoading && !query">
+    <div class="not-data" v-show="!songList.length && !query">
       <p>赶快去收藏你喜欢的音乐</p>
-    </div>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
     </div>
   </div>
 </template>
@@ -69,10 +66,6 @@ export default {
     songList: {
       type: Array,
       default: () => []
-    },
-    showLoading: {
-      type: Boolean,
-      default: true
     },
     enabled: {
       type: Boolean,
@@ -143,12 +136,7 @@ export default {
         })
         this.savePlayListRouter(this.$route.path)
       } else {
-        this.alertFlow = true
-        this.alert.icon = 'fa-times-circle'
-        this.alert.text = '因合作方要求，该资源暂时下架>_<'
-        setTimeout(() => {
-          this.alertFlow = false
-        }, 1500)
+        this.$toast('因合作方要求，该资源暂时下架>_<')
       }
     },
     addComment (event) {

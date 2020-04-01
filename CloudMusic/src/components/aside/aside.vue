@@ -14,7 +14,7 @@
           </div>
           <div class="user-account flex" v-if="user.length">
             <router-link :to="{ name: 'user', params: { userId: user[0].profile.userId }}" class="avatar-img">
-              <img :src="avatarUrl" alt="" width="100%">
+              <img v-lazy="avatarUrl" alt="" width="100%">
             </router-link>
             <span class="cursor" @click="accountInfo" ref="userAccount">
               <span class="avatar-name">
@@ -243,7 +243,7 @@ export default {
       bottom: $player-height
       width: $aisde-width
       background: $asid-background
-      z-index: 2
+      // z-index: 2
       .aside-content
         height: 100%
         overflow: hidden

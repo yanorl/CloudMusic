@@ -33,9 +33,6 @@
     </scroll>
     <confirm ref="confirmPlay" text="'播放全部'将会替换当前的播放列表，是否继续" cancelBtnText="取消" confimBtnText="继续" @confirm="confirmClick"></confirm>
     <confirm ref="confirmFavorite" text="确定不再收藏该歌单" cancelBtnText="取消" confimBtnText="确定" @confirm="cancelSubscribed"></confirm>
-    <div class="alert-container" v-show="alertFlow">
-      <alert :icon='alert.icon' :text="alert.text"></alert>
-    </div>
   </div>
 </template>
 
@@ -48,7 +45,6 @@ import Review from 'components/album/review/review'
 import Info from 'components/album/info/info'
 import SongList from 'base/song-list/song-list'
 import Confirm from 'base/confirm/confirm'
-import Alert from 'base/alert/alert'
 import SongListClass from 'common/js/songListClass'
 import { mapActions } from 'vuex'
 
@@ -67,12 +63,7 @@ export default {
         {name: '歌曲列表', total: false},
         {name: '评论', total: true},
         {name: '专辑详情', total: false}
-      ],
-      alertFlow: false,
-      alert: {
-        icon: 'fa-check-circle',
-        text: '收藏成功！'
-      }
+      ]
     }
   },
   computed: {
@@ -93,8 +84,7 @@ export default {
     Review,
     SongList,
     Confirm,
-    Info,
-    Alert
+    Info
   },
   methods: {
     showConfirmPlay () {
@@ -108,15 +98,10 @@ export default {
       albumSub({t, id: this.$route.params.id, timestamp: (new Date()).valueOf()}).then((res) => {
         if (res.code === ERR_OK) {
           if (t === 1) {
-            that.alert.text = '收藏成功！'
+            that.$toast('收藏成功！')
           } else if (t === 2) {
-            that.alert.text = '歌单取消收藏成功!'
+            that.$toast('歌单取消收藏成功')
           }
-          that.alertFlow = true
-          setTimeout(() => {
-            that.alertFlow = false
-            that._album()
-          }, 1500)
         }
       })
     },
